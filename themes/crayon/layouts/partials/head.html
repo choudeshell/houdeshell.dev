@@ -1,0 +1,43 @@
+<meta charset="utf-8">
+{{- hugo.Generator -}}
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="supported-color-schemes" content="light dark">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+
+{{- $description := "" -}}
+{{- if .IsPage -}}
+  {{- if .Params.Description -}}
+    {{- $description = .Params.Description -}}
+  {{- else -}}
+    {{- $description = .Summary -}}
+  {{- end -}}
+{{- else if .Params.Description -}}
+  {{- $description = .Params.Description -}}
+{{- else -}}
+  {{- $description = .Site.Params.Description -}}
+{{- end -}}
+<meta name="description" content="{{- $description -}}">
+{{- define "title" -}}
+    {{- $title := .Title -}}
+    {{- if and (ne $title "") (ne $title site.Title) -}}
+        <title>{{- $title | safeHTML -}} &nbsp;&ndash;&nbsp; {{- site.Title | safeHTML -}}</title>
+    {{- else -}}
+        {{- $slogan := site.Params.slogan -}}
+        <title>{{- site.Title | safeHTML -}}{{- if and (isset site.Params "slogan") (ne $slogan "") -}} &nbsp;&ndash;&nbsp;
+            {{- $slogan | safeHTML -}}{{- end -}}</title>
+    {{- end -}}
+{{- end -}}
+
+{{- block "title" . -}}{{- end -}}
+
+{{- partial "style.html" . -}}
+{{- partial "rss-feed.html" . -}}
+{{- partial "twitter-card.html" . -}}
+{{- if .Params.Robots -}}
+<meta name="robots" content="{{ .Params.robots }}" />
+{{- end -}}
+{{- partial "head-extra.html" . -}}
