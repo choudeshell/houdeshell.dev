@@ -28,7 +28,7 @@ dateFormat = "Monday, January 2, 2006"  # if unset, default is "2006-01-02"
 logo = ""  # if you have a logo png
 slogan = ""
 license = "MIT"  # CC License
-fullRss = false # Puts entire HTML post into rss 'description' tag. If unset, default is false.
+fullRss = true # Puts entire HTML post into rss 'description' tag. If unset, default is false.
 ipv6ready = false
 github = "choudeshell"
 
@@ -54,21 +54,11 @@ inlineToolId = ""
 
 [params.nav]
 showCategories = false       # /categories/
-showTags = true             # /tags/
+showTags = false             # /tags/
 
 # custom navigation items
 
-[[params.nav.custom]]
-title = "Home"
-url = "/"
 
-[[params.nav.custom]]
-title = "About"
-url = "/about"
-
-[[params.nav.custom]]
-title = "❤"
-url = "/software"
 
 [[module.mounts]]
 source = 'static'
