@@ -66,6 +66,10 @@ url = "/"
 title = "About"
 url = "/about"
 
+[[params.nav.custom]]
+title = "❤"
+url = "/software"
+
 [[module.mounts]]
 source = 'static'
 target = 'static'
