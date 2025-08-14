@@ -7,6 +7,7 @@ tags: ["keycloak"]
 title: "'NAMESPACED' CLAIMS IN KEYCLOAK"
 type: "post"
 bag: true
+draft: true
 ---
 
 ![Keycloak Image](/static/keycloak.png)

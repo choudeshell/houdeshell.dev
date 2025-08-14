@@ -1,6 +1,6 @@
 :root {
-  color-scheme: light dark;
-  supported-color-schemes: light dark;
+  color-scheme: light;
+  supported-color-schemes: light;
 }
 
 /* Works on Firefox */
@@ -326,6 +326,7 @@ b {
 .nav.item {
   display: inline-block;
   padding: 4px 6px;
+  font-weight:400;
 }
 
 .footer-wrap {
@@ -376,7 +377,8 @@ b {
 }
 
 .title {
-  color: #000;
+      font-weight: 400;
+    color: #000;
 }
 
 .note {
@@ -392,12 +394,14 @@ b {
 {
   text-decoration-line: underline;
   text-decoration-style: wavy;
+    color: #000;
+
 }
 
 .note.title,
 .site.name {
   font-size: 2em;
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .mldr {
@@ -458,6 +462,7 @@ b {
 
 .tag {
   color: rgba(29, 43, 76, .85);
+      text-decoration: none;
 }
 
 .category {
@@ -477,8 +482,8 @@ b {
 }
 
 .article.discussion {
-  border-top: 1px dashed #e6e6e6;
-  border-bottom: 1px dashed #e6e6e6;
+  border-top: 1px dotted #e6e6e6;
+  border-bottom: 1px dotted #e6e6e6;
 }
 
 .article.navigation p {
@@ -599,15 +604,20 @@ b {
 .article.markdown-body h4,
 .article.markdown-body h5,
 .article.markdown-body h6 {
-  color: #1d2b4c;
+  color: #000;
   margin-top: 24px;
   margin-bottom: 20px;
+  font-weight:400;
 }
 
 .article.markdown-body h1,
 .article.markdown-body h2 {
   padding-bottom: 0.3em;
-  border-bottom: 1px solid #e6e6e6;
+  border-bottom:3px dotted #000000;
+      font-weight: 400;
+    color: #000;
+    padding-top:1em;
+
 }
 
 .article.markdown-body img {
@@ -652,7 +662,7 @@ b {
 
 .article.markdown-body hr {
   opacity: .4;
-  border-top-style: dashed;
+  border-top-style: dotted;
   border-top-color: inherit;
 }
 
@@ -779,5 +789,5 @@ b {
 }
 
 .article.markdown-body .lntable tr>:first-child {
-  border-right: 1px dashed #e6e6e6;
+  border-right: 1px dotted #e6e6e6;
 }
