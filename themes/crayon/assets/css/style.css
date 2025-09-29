@@ -6,32 +6,32 @@
 /* Works on Firefox */
 * {
   scrollbar-width: auto;
-  scrollbar-color: rgba(0, 0, 0, 0.175) transparent
+  scrollbar-color: rgba(0, 0, 0, 0.175) transparent;
 }
 
 /* Works on Chrome, Edge, and Safari */
 *::-webkit-scrollbar {
   width: 12px; /* width of the entire scrollbar */
-  height: 12px
+  height: 12px;
 }
 
 *::-webkit-scrollbar-track-piece {
-  background: transparent
+  background: transparent;
 }
 
 *::-webkit-scrollbar-track {
-  background: transparent /* color of the tracking area */
+  background: transparent; /* color of the tracking area */
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.175);   /* color of the scroll thumb */
+  background-color: rgba(0, 0, 0, 0.175); /* color of the scroll thumb */
   background-clip: padding-box;
-  border-radius: 6px;       /* roundness of the scroll thumb */
-  border: 2px solid transparent  /* creates padding around scroll thumb */
+  border-radius: 6px; /* roundness of the scroll thumb */
+  border: 2px solid transparent; /* creates padding around scroll thumb */
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 0.35)
+  background-color: rgba(0, 0, 0, 0.35);
 }
 
 html {
@@ -46,9 +46,9 @@ html {
 
 body {
   display: block;
-  color: #000;
-  background-color: #f2d336;
-font-family: "Inter", sans-serif;
+  color: #e2e2e2;
+  background-color: #1D212C;
+  font-family: "Inter", sans-serif;
   word-break: normal;
   word-wrap: break-word;
 
@@ -100,11 +100,11 @@ h4 {
 }
 
 h5 {
-  font-size: .85em;
+  font-size: 0.85em;
 }
 
 h6 {
-  font-size: .7em;
+  font-size: 0.7em;
 }
 
 blockquote,
@@ -114,12 +114,12 @@ q {
 }
 
 mark {
-  background-color: rgba(12, 242, 143, .2);
+  background-color: rgba(12, 242, 143, 0.2);
 }
 
 mark {
-  padding-left: .15em;
-  padding-right: .15em;
+  padding-left: 0.15em;
+  padding-right: 0.15em;
   border-radius: 3px;
 }
 
@@ -154,7 +154,7 @@ kbd,
 tt,
 samp {
   color: #fff;
-  padding: .2em .4em;
+  padding: 0.2em 0.4em;
   margin: 0;
   font-size: 85%;
   background-color: #000;
@@ -192,8 +192,8 @@ table tr:nth-child(even) {
 }
 
 a {
-  color: #000;
-  font-weight:bold;
+  color: rgb(46 161 97);
+  font-weight: bold;
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
   -webkit-text-decoration-skip: objects;
@@ -203,8 +203,8 @@ a {
   text-decoration-style: wavy;
 }
 
-.nav a, .header a
-{
+.nav a,
+.header a {
   text-decoration-line: none;
 }
 
@@ -224,7 +224,7 @@ acronym {
 strong,
 b {
   color: #000;
-  font-weight:800;
+  font-weight: 800;
 }
 
 .image-container,
@@ -239,8 +239,8 @@ b {
 
 .image-container .title {
   display: inline-block;
-  opacity: .6;
-  font-size: .875em;
+  opacity: 0.6;
+  font-size: 0.875em;
   text-align: initial;
   min-height: 22px;
   padding: 10px 5px;
@@ -260,7 +260,7 @@ b {
 }
 
 #footer {
-  font-size: .75em;
+  font-size: 0.75em;
   margin-top: 48px;
   margin-bottom: 30px;
 }
@@ -274,8 +274,8 @@ b {
   margin-top: -5px;
 }
 
-.header.wrap>*,
-.nav.wrap>* {
+.header.wrap > *,
+.nav.wrap > * {
   margin-top: 5px;
 }
 
@@ -306,14 +306,14 @@ b {
 }
 
 .site.name {
-      color: #fff;
-    background: #000;
-    padding: 20px;
-    line-height: 75px;
+  color: #fff;
+  background: rgb(46 161 97);
+  padding: 20px;
+  line-height: 75px;
 }
 
 .site.slogan {
-  font-size: .875em;
+  font-size: 0.875em;
   text-align: center;
 }
 
@@ -326,7 +326,7 @@ b {
 .nav.item {
   display: inline-block;
   padding: 4px 6px;
-  font-weight:400;
+  font-weight: 400;
 }
 
 .footer-wrap {
@@ -335,13 +335,13 @@ b {
 }
 
 .date {
-  font-size: .875em;
+  font-size: 0.875em;
 }
 
 .langs {
   display: inline-block;
   list-style: none;
-  font-size: .875em;
+  font-size: 0.875em;
 }
 
 .lang {
@@ -362,23 +362,22 @@ b {
 }
 
 .note.list .item:hover {
-
 }
 
 .nav.item:hover {
-  opacity: .5;
+  opacity: 0.5;
   text-decoration: none;
 }
 
 .tag:hover,
 .category:hover {
-  opacity: .5;
+  opacity: 0.5;
   text-decoration: none;
 }
 
 .title {
-      font-weight: 400;
-    color: #000;
+  font-weight: 400;
+  color: #fff;
 }
 
 .note {
@@ -390,12 +389,11 @@ b {
   text-decoration: none;
 }
 
-.note.title
-{
+.note.title {
   text-decoration-line: underline;
   text-decoration-style: wavy;
-    color: #000;
-
+  text-decoration-color: rgb(255,98,102);
+  color: #fff;
 }
 
 .note.title,
@@ -405,7 +403,7 @@ b {
 }
 
 .mldr {
-  opacity: .6;
+  opacity: 0.6;
 }
 
 .note.title,
@@ -457,19 +455,19 @@ b {
 
 .tag::before {
   content: "\23";
-  opacity: .5;
+  opacity: 0.5;
 }
 
 .tag {
-  color: rgba(29, 43, 76, .85);
-      text-decoration: none;
+  color: rgba(29, 43, 76, 0.85);
+  text-decoration: none;
 }
 
 .category {
   padding: 0 6px;
   border-radius: 3px;
   color: #fff;
-  background-color: rgba(29, 43, 76, .85);
+  background-color: rgba(29, 43, 76, 0.85);
 }
 
 .article.labels,
@@ -490,7 +488,7 @@ b {
   margin: 0;
 }
 
-.article.navigation p+p {
+.article.navigation p + p {
   margin-top: 5px;
 }
 
@@ -510,7 +508,7 @@ b {
   text-align: center;
 }
 
-.article.author>* {
+.article.author > * {
   margin-top: 16px;
 }
 
@@ -537,13 +535,13 @@ b {
 
 .article.author .details .item:hover {
   text-decoration: none;
-  opacity: .5;
+  opacity: 0.5;
 }
 
 .slogan,
 .date,
 .license {
-  color:rgb(59 59 59 / 72%);
+  color: rgb(217 217 217 / 72%);
 }
 
 .pagination {
@@ -577,7 +575,7 @@ b {
 }
 
 .pagination ul li a:hover:not(.active) {
-  background-color: rgba(0, 102, 204, .5);
+  background-color: rgba(0, 102, 204, 0.5);
 }
 
 .article-container {
@@ -585,7 +583,6 @@ b {
 }
 
 .article-container {
-
 }
 
 .article.markdown-body {
@@ -604,20 +601,18 @@ b {
 .article.markdown-body h4,
 .article.markdown-body h5,
 .article.markdown-body h6 {
-  color: #000;
+  color: #fff;
   margin-top: 24px;
   margin-bottom: 20px;
-  font-weight:400;
+  font-weight: 400;
 }
 
 .article.markdown-body h1,
 .article.markdown-body h2 {
   padding-bottom: 0.3em;
-  border-bottom:3px dotted #000000;
-      font-weight: 400;
-    color: #000;
-    padding-top:1em;
-
+  border-bottom: 3px dotted rgb(255, 98, 102);
+  color: #fff;
+  padding-top: 1em;
 }
 
 .article.markdown-body img {
@@ -631,12 +626,12 @@ b {
 
 .article.markdown-body blockquote {
   padding: 0 1em;
-  border-left: .25em solid #000;
+  border-left: 0.25em solid #000;
 }
 
 .article.markdown-body q::before,
 .article.markdown-body q::after {
-  opacity: .6;
+  opacity: 0.6;
 }
 
 .article.markdown-body q::before {
@@ -661,7 +656,7 @@ b {
 }
 
 .article.markdown-body hr {
-  opacity: .4;
+  opacity: 0.4;
   border-top-style: dotted;
   border-top-color: inherit;
 }
@@ -696,27 +691,27 @@ b {
   max-width: 25%;
 }
 
-.article.markdown-body li+li {
+.article.markdown-body li + li {
   margin-top: 20px;
 }
 
-.article.markdown-body>*,
-.article.markdown-body li>*,
-.article.markdown-body blockquote>*,
-.article.markdown-body .footnotes>* {
+.article.markdown-body > *,
+.article.markdown-body li > *,
+.article.markdown-body blockquote > *,
+.article.markdown-body .footnotes > * {
   margin-top: 20px;
   margin-bottom: 20px;
 }
 
-.article.markdown-body> :first-child,
-.article.markdown-body li> :first-child,
-.article.markdown-body blockquote> :first-child {
+.article.markdown-body > :first-child,
+.article.markdown-body li > :first-child,
+.article.markdown-body blockquote > :first-child {
   margin-top: 20px;
 }
 
-.article.markdown-body> :last-child,
-.article.markdown-body li> :last-child,
-.article.markdown-body blockquote> :last-child {
+.article.markdown-body > :last-child,
+.article.markdown-body li > :last-child,
+.article.markdown-body blockquote > :last-child {
   margin-bottom: 0;
 }
 
@@ -755,7 +750,7 @@ b {
 .article.markdown-body .katex-display,
 .article.markdown-body .MathJax_Display {
   margin: 0;
-  padding: .2em .4em;
+  padding: 0.2em 0.4em;
 }
 
 .article.markdown-body .MathJax {
@@ -788,6 +783,6 @@ b {
   border: 0;
 }
 
-.article.markdown-body .lntable tr>:first-child {
+.article.markdown-body .lntable tr > :first-child {
   border-right: 1px dotted #e6e6e6;
 }
