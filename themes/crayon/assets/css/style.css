@@ -192,7 +192,7 @@ table tr:nth-child(even) {
 }
 
 a {
-  color: rgb(46 161 97);
+  color: #ff6266;
   font-weight: bold;
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
@@ -200,7 +200,7 @@ a {
   -moz-text-decoration-skip: objects;
   text-decoration-skip: objects;
   text-decoration-line: underline;
-  text-decoration-style: wavy;
+  text-decoration-style: dotted;
 }
 
 .nav a,
@@ -307,7 +307,7 @@ b {
 
 .site.name {
   color: #fff;
-  background: rgb(46 161 97);
+  background:#0e1016;
   padding: 20px;
   line-height: 75px;
 }
@@ -391,7 +391,7 @@ b {
 
 .note.title {
   text-decoration-line: underline;
-  text-decoration-style: wavy;
+  text-decoration-style: dashed;
   text-decoration-color: rgb(255,98,102);
   color: #fff;
 }
