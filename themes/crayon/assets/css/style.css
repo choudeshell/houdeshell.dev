@@ -206,6 +206,7 @@ a {
 .nav a,
 .header a {
   text-decoration-line: none;
+  color:#fff;
 }
 
 a:hover {
@@ -252,7 +253,7 @@ b {
   min-height: 64px;
   margin-bottom: 30px;
   background:rgb(14, 9, 37);
-  border-bottom: 1px solid #ff6266;
+  border-bottom: 1px solid color(srgb 0.819608 0.780392 1 / 0.25);
 }
 
 #content {
@@ -280,6 +281,10 @@ b {
 .nav.wrap > * {
   margin-top: 5px;
   line-height: 75px;
+}
+
+.hl {
+  color: #ff6266;
 }
 
 .header.left-side,

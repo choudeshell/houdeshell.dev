@@ -4,7 +4,7 @@
                 {{- if $logo -}}
                 <img alt="" loading="lazy" class="site logo" src="{{- $logo | relURL -}}"/>
                 {{- end -}}
-                <span class="site name"><{{- site.Title | safeHTML -}}/></span></a></span>
+                <span class="site name"><span class="hl">&lt;</span>houdeshell.dev<span class="hl">/&gt;</span></a></span>
         <span class="header right-side">
             {{- partial "navigation-items.html" site.Params.nav -}}
         </span></div>
