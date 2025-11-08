@@ -47,7 +47,7 @@ html {
 body {
   display: block;
   color: #e2e2e2;
-  background-color: #1D212C;
+  background-color: rgb(20, 12, 49);
   font-family: "Inter", sans-serif;
   word-break: normal;
   word-wrap: break-word;
@@ -307,7 +307,7 @@ b {
 
 .site.name {
   color: #fff;
-  background:#0e1016;
+  background:rgb(14, 9, 37);
   padding: 20px;
   line-height: 75px;
 }
