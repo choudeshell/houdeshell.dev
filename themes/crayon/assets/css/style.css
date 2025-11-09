@@ -47,7 +47,7 @@ html {
 body {
   display: block;
   color: #e2e2e2;
-  background-color: rgb(20, 12, 49);
+  background:rgb(14, 9, 37);
   font-family: "Inter", sans-serif;
   word-break: normal;
   word-wrap: break-word;
@@ -253,13 +253,14 @@ b {
   min-height: 64px;
   margin-bottom: 30px;
   background:rgb(14, 9, 37);
-  border-bottom: 1px solid color(srgb 0.819608 0.780392 1 / 0.25);
+  max-width: 1170px;
+  margin: 0 auto;
 }
 
 #content {
   display: block;
   margin: 0 auto;
-  max-width: 744px;
+  max-width: 1170px;
 }
 
 #footer {
