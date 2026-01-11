@@ -3,9 +3,8 @@
     <nav class="nav">
                 <a class="nav item" href="/about">&nbsp;About</a>
         <a class="nav item" href="/software">&nbsp;Software</a>
-        <a class="nav item" href="https://github.com/choudeshell"><i
-                class="fa-brands fa-github-alt"></i>&nbsp;</a>
-        <a class="nav item" href="/tags"><i class="fa-solid fa-tag"></i>&nbsp;</a>
+        <a class="nav item" href="https://github.com/choudeshell"><i class='bxl  bx-github header-align'></i>&nbsp;</a>
+        <a class="nav item" href="/tags"><i class='bx  bx-tag header-align'></i>&nbsp;</a>
         {{- range $nav.custom -}}
         {{- $url := replace .url "#" "%23" -}}
         {{- $url = replace $url "." "%2e" -}}

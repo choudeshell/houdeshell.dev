@@ -1,6 +1,5 @@
 :root {
   color-scheme: light;
-  supported-color-schemes: light;
 }
 
 /* Works on Firefox */
@@ -47,7 +46,7 @@ html {
 body {
   display: block;
   color: #e2e2e2;
-  background:rgb(14, 9, 37);
+  background: rgb(28, 28, 30);
   font-family: "Inter", sans-serif;
   word-break: normal;
   word-wrap: break-word;
@@ -206,7 +205,7 @@ a {
 .nav a,
 .header a {
   text-decoration-line: none;
-  color:#fff;
+  color: #fff;
 }
 
 a:hover {
@@ -252,7 +251,6 @@ b {
   padding-bottom: 20px;
   min-height: 64px;
   margin-bottom: 30px;
-  background:rgb(14, 9, 37);
   max-width: 1170px;
   margin: 0 auto;
 }
@@ -294,6 +292,15 @@ b {
   text-align: initial;
 }
 
+.vam {
+      vertical-align: middle;
+}
+
+.header-align {
+  font-size: 19px;
+  vertical-align: middle;
+}
+
 .header.left-side {
   float: left;
 }
@@ -316,7 +323,6 @@ b {
 
 .site.name {
   color: #fff;
-  background:rgb(14, 9, 37);
   padding: 20px;
   line-height: 75px;
 }
@@ -370,9 +376,6 @@ b {
   border-radius: 6px;
 }
 
-.note.list .item:hover {
-}
-
 .nav.item:hover {
   opacity: 0.5;
   text-decoration: none;
@@ -401,11 +404,16 @@ b {
 .note.title {
   text-decoration-line: underline;
   text-decoration-style: dashed;
-  text-decoration-color: rgb(255,98,102);
+  text-decoration-color: rgb(255, 98, 102);
   color: #fff;
+      font-size: 1.75em;
 }
 
-.note.title,
+img
+{
+  border: 3px #ff6266 solid;
+}
+
 .site.name {
   font-size: 2em;
   font-weight: 400;
@@ -589,9 +597,6 @@ b {
 
 .article-container {
   padding: 32px;
-}
-
-.article-container {
 }
 
 .article.markdown-body {

@@ -1,5 +1,5 @@
 {{- if and (not (eq .Params.single true)) (or .PrevInSection .NextInSection) -}}
-<section class="article navigation">
+<!-- <section class="article navigation">
     {{- with .NextInSection -}}
       {{- $title := .Title | safeHTML -}}
       {{- if $title -}}<p><a class="link" href="{{- .RelPermalink -}}"><span class="iconfont icon-article"></span>{{- $title -}}</a></p>{{- end -}}
@@ -8,5 +8,5 @@
       {{- $title := .Title | safeHTML -}}
       {{- if $title -}}<p><a class="link" href="{{- .RelPermalink -}}"><span class="iconfont icon-article"></span>{{- .Title | safeHTML -}}</a></p>{{- end -}}
     {{- end -}}
-</section>
+</section> -->
 {{- end -}}

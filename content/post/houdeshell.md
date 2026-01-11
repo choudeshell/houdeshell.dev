@@ -10,6 +10,8 @@ bag: true
 draft: false
 ---
 
+![Software Engineer Blogging](/static/images/eng_blogging.png)
+
 Here’s the thing: most developers don’t blog. I haven't in a long time. And that’s a shame — because it’s one of the easiest ways to level up your skills, stand out, and open doors you didn’t even know were there.
 
 I’m not talking about some corporate PR thing or a perfectly polished tech journal. I mean your own little corner of the internet where you write about what you’ve learned, what’s broken, and how you fixed it.

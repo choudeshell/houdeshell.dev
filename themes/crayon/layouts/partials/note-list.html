@@ -18,7 +18,7 @@
             {{- if .Lastmod  -}}
                 <p class="note date">mod:  {{- .Lastmod.Format $dateFormat -}}</p>
             {{- end -}}
-            {{- if .Summary -}}<p class="note content">{{- .Summary -}}{{- if .Truncated -}}<span class="mldr">&mldr;</span> <br/><br/>   <a href="{{ .RelPermalink }}">Read more ->.</a>
+            {{- if .Summary -}}<p class="note content">{{- .Summary -}}{{- if .Truncated -}}<span class="mldr">&mldr;</span> <br/><br/>   <a href="{{ .RelPermalink }}">Read more <i class='bx  bx-arrow-out-right-stroke-circle-half vam'></i>  </a>
 {{- end -}}</p>{{- end -}}
             
             {{- $imgs := .Params.imgs -}}
