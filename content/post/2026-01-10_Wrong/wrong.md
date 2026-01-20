@@ -1,7 +1,7 @@
 ---
 author: "CRH"
 date: "2026-01-10"
-modified: "2026-01-10"
+modified: "2026-01-19"
 description: ""
 tags: []
 title: "On being 'wrong'..."
@@ -18,5 +18,7 @@ In software engineering, being wrong isn’t a failure; being wrong is an early 
 
 Correctness is an outcome of iteration. The goal isn’t to never be wrong, but to be wrong in ways that move things forward. In software engineering, progress is often just a series of well-crafted mistakes. 
 
-Last week, on 3 separate occasions, amazing engineers were didn't share their opinions because they were afraid of being wrong. Their ideas were expressed to me after the meetings. Regardless of their correctness, all 3 ideas would propelled us further in the meetings. 
+Last week, on 3 separate occasions, amazing engineers didn't share their opinions because they were afraid of being wrong. Their ideas were expressed to me after the meetings. Regardless of their correctness, all 3 ideas would have propelled us further in the meetings. 
+
+So don't worry about being wrong. Being wrong isn't a failure; it is a step in iteration. 
 
