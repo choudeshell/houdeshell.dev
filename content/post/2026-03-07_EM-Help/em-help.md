@@ -10,7 +10,7 @@ bag: true
 draft: false
 ---
 
-There's a post going around, [Don't Become an Engineering Manager](https://newsletter.manager.dev/p/dont-become-an-engineering-manager), making the case that senior engineers should stay IC. The ladder is flattening, Staff pays better, tech is moving too fast to step away. Probably right, but it bugs me.
+During my regularly scheduled lurking on Hacker News, I came across [Don't Become an Engineering Manager](https://newsletter.manager.dev/p/dont-become-an-engineering-manager), making the case that senior engineers should stay IC. The ladder is flattening, Staff pays better, tech is moving too fast to step away. Probably right, but it bugs me.
 
 It treats the EM role like a career trade. A thing you optimize for or against. And when you look at it that way, sure, the math is shaky right now. But that skips the question I actually care about: what does a good engineering manager *do* for the engineers on their team?
 
