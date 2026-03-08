@@ -42,10 +42,13 @@ repo = "MetalBlueberry/MetalBlueberry.github.io" # enable comments with [utteran
 enable = false  # optional: true, false. Enable globally, default: false. You can always enable math on per page.
 use = "katex"  # option: "katex", "mathjax". default: "katex"
 
+[params.assets]
+css = ["css/custom.css"]
+
 [params.syntax]
 use = "none"  # builtin: "prismjs", "hljs". "none" means Chroma
-theme = "xcode-dark"
-darkTheme = "xcode-dark"  # apply this theme in dark mode
+theme = "github"
+darkTheme = "github"  # apply this theme in dark mode
 
 [params.share]
 enable = false

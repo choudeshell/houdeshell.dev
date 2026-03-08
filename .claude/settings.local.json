@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p /Users/chris.houdeshell/devel/houdeshell.dev/assets/css)",
+      "Bash(mkdir -p /Users/chris.houdeshell/devel/houdeshell.dev/layouts/partials)",
+      "Bash(hugo)",
+      "Bash(grep -l \"custom\" /Users/chris.houdeshell/devel/houdeshell.dev/public/css/*.css)",
+      "Bash(grep -c \"JetBrains\" /Users/chris.houdeshell/devel/houdeshell.dev/public/css/core.*.css)",
+      "Bash(grep -c \"JetBrains\" /Users/chris.houdeshell/devel/houdeshell.dev/public/css/*.css)"
+    ]
+  }
+}

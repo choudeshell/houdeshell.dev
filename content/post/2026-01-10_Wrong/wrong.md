@@ -1,7 +1,7 @@
 ---
 author: "CRH"
 date: "2026-01-10"
-modified: "2026-01-19"
+modified: "2026-03-07"
 description: ""
 tags: []
 title: "On being 'wrong'..."
@@ -10,15 +10,15 @@ bag: true
 draft: false
 ---
 
-![Wrong](/static/images/wrong2.png)
+Every bug I’ve ever shipped happened because the system did exactly what I told it to, not what I meant. That gap — between what I intended and what I actually built — is where most of the interesting lessons live.
 
-In software engineering, being wrong isn’t a failure; being wrong is an early signal. Every bug, failed deploy, or incorrect assumption is feedback that a system is doing exactly what it was told, not what was intended. That gap between intent and reality is where learning happens.
+Last week, on three separate occasions, sharp engineers held back their ideas in meetings because they were afraid of being wrong. I only heard those ideas afterward, in side conversations. Every single one of them would have moved the discussion forward, regardless of whether they turned out to be “right.”
 
-~~Engineers~~ People who are comfortable admitting “I was wrong” tend to collaborate better. They invite feedback, adapt faster, and make better long-term decisions. In my experience, teams built on psychological safety consistently outperform those driven by blame. 
+That stuck with me.
 
-Correctness is an outcome of iteration. The goal isn’t to never be wrong, but to be wrong in ways that move things forward. In software engineering, progress is often just a series of well-crafted mistakes. 
+~~Engineers~~ People who can say “I was wrong” out loud tend to work better together. They pull in feedback earlier, course-correct faster, and make fewer of the same mistakes twice. The teams I’ve seen do the best work aren’t the ones where everyone is right all the time — they’re the ones where nobody is penalized for being wrong.
 
-Last week, on 3 separate occasions, amazing engineers didn't share their opinions because they were afraid of being wrong. Their ideas were expressed to me after the meetings. Regardless of their correctness, all 3 ideas would have propelled us further in the meetings. 
+We don’t get to correctness by avoiding mistakes. We get there by making them, catching them, and iterating. Most of the progress I’ve seen in my career has really just been a series of well-aimed misses.
 
-So don't worry about being wrong. Being wrong isn't a failure; it is a step in iteration. 
+So say the wrong thing. Propose the bad idea. You might be surprised how often “wrong” turns out to be the fastest way forward.
 
