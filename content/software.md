@@ -27,5 +27,5 @@ As negative as the world can be, this is software that I ❤.
 
 # Utilities / Apps
 - AltTab (Mac) 
--- Why does Mac OS think a minimized window is an in-active window and not let you 'switch' to it?
+-- Why does Mac OS think a minimized window is an inactive window and not let you 'switch' to it?
 

@@ -239,9 +239,13 @@ mark {
 
 .article.markdown-body h1,
 .article.markdown-body h2 {
-  border-bottom: 3px solid var(--accent-bright);
+  border-bottom: none;
+  border-left: 3px solid var(--accent-bright);
   color: var(--text);
-  padding-bottom: 0.2em;
+  padding-left: 10px;
+  padding-top: 0;
+  padding-bottom: 0;
+  font-size: 1.3em;
 }
 
 .article.markdown-body blockquote,
