@@ -116,6 +116,7 @@ a:hover {
   font-size: 0.8em;
 }
 
+
 .date {
   font-size: 0.8em;
 }
@@ -365,4 +366,97 @@ mark {
 del, s {
   text-decoration-color: var(--accent-bright);
   text-decoration-thickness: 2px;
+}
+
+/* -- 404 page -- */
+
+.fourohfour h1 {
+  text-align: center;
+  font-size: 1.6em;
+}
+
+.fourohfour-content {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.fourohfour-ascii {
+  text-align: center;
+  color: var(--accent);
+  font-size: 1.1em;
+  border: none;
+  background: transparent;
+  margin: 2em 0 1.5em;
+}
+
+.fourohfour-content p,
+.fourohfour-content ul {
+  font-size: 0.95em;
+  color: var(--text-secondary);
+}
+
+.fourohfour-content a {
+  font-weight: 600;
+}
+
+/* -- Footer -- */
+
+.footer-wrap {
+  text-align: center;
+  padding: 2em 0 2em;
+  border-top: 1px solid var(--border-light);
+  margin-top: 2em;
+}
+
+.footer-slogan {
+  margin-bottom: 1.5em;
+}
+
+.footer-slogan .homepage-slogan {
+  display: inline-block;
+  color: var(--text-secondary);
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-size: 0.85em;
+  margin: 0;
+  border-left: 4px solid var(--accent-bright);
+  padding-left: 12px;
+  text-align: left;
+}
+
+.footer-slogan .homepage-slogan::after {
+  content: "_";
+  color: var(--accent);
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+.footer-meta {
+  opacity: 0.5;
+}
+
+.footer-meta:hover {
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.footer-wrap .copyright {
+  color: var(--text-secondary);
+  font-size: 0.7em;
+  margin: 0;
+}
+
+.footer-wrap .powerby {
+  color: var(--text-secondary);
+  font-size: 0.65em;
+  margin-top: 0.4em;
+}
+
+.footer-wrap .powerby code {
+  font-size: 0.9em;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
 }

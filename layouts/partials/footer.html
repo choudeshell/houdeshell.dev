@@ -1,0 +1,17 @@
+<section id="footer">
+    <div class="footer-wrap">
+        <div class="footer-slogan">
+            {{- with site.Params.slogan -}}
+            <p class="homepage-slogan">// {{- . | safeHTML -}}</p>
+            {{- end -}}
+        </div>
+        <div class="footer-meta">
+            <p class="copyright">{{ site.Copyright }} · happy hacking!</p>
+            <p class="powerby"><code>uptime: too long · load avg: caffeine, meetings, PRs</code></p>
+        </div>
+    </div>
+</section>
+{{- partial "math.html" . -}}
+{{- partial "syntax.html" . -}}
+{{- template "_internal/google_analytics.html" . -}}
+{{- partial "custom-js.html" . -}}

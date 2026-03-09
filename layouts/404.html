@@ -1,0 +1,26 @@
+{{- define "main" -}}
+<div class="article-container">
+<article class="article markdown-body fourohfour">
+  <h1 id="title">404: Page Not Found</h1>
+  <div class="fourohfour-content">
+    <pre class="fourohfour-ascii">
+    _____ _____ _____
+   |  _  |     |  _  |
+   |   __|  |  |   __|
+   |__|  |_____|__|
+
+   SEGFAULT (core dumped)
+    </pre>
+    <p>The page you're looking for has been garbage collected.</p>
+    <p>Possible causes:</p>
+    <ul>
+      <li>The pointer you followed has been freed</li>
+      <li>This route was deprecated without a migration path</li>
+      <li>Someone did a <code>git push --force</code> and didn't tell anyone</li>
+      <li>It's DNS. It's always DNS.</li>
+    </ul>
+    <p><a href="/">cd ~</a> and try again.</p>
+  </div>
+</article>
+</div>
+{{- end -}}
