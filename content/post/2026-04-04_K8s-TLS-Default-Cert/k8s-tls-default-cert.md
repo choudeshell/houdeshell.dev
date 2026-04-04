@@ -10,56 +10,6 @@ bag: true
 draft: false
 ---
 
-<style>
-.k8s-terminal {
-  background: var(--code-bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 1.2em 1.5em;
-  margin: 1.5em 0;
-  font-size: 0.85em;
-  line-height: 1.8;
-  overflow-x: auto;
-}
-.k8s-terminal .prompt {
-  color: var(--accent);
-  user-select: none;
-}
-.k8s-terminal .cmd {
-  color: var(--text);
-}
-.k8s-terminal .output {
-  color: var(--text-secondary);
-}
-.k8s-terminal .comment {
-  color: var(--text-secondary);
-  opacity: 0.6;
-}
-.k8s-callout {
-  background: var(--bg-card);
-  border-left: 4px solid var(--accent);
-  border-radius: 0 8px 8px 0;
-  padding: 1em 1.5em;
-  margin: 1.5em 0;
-  font-size: 0.9em;
-  line-height: 1.8;
-}
-.k8s-callout p {
-  margin-bottom: 0.8em;
-}
-.k8s-callout p:last-child {
-  margin-bottom: 0;
-}
-.k8s-callout.warning {
-  border-left-color: #ff6b6b;
-}
-.k8s-callout.warning strong {
-  color: #ff6b6b;
-}
-.k8s-callout strong {
-  color: var(--accent);
-}
-</style>
 
 *This is the first post in a series for new operations and cloud engineers getting started with Kubernetes. Whether you're running K3s on a Raspberry Pi, EKS in AWS, AKS in Azure, or anything in between — the concepts are the same. Let's get into it.*
 

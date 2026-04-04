@@ -11,58 +11,6 @@ section = "about"
 
 +++
 
-<style>
-.about-header {
-  display: flex;
-  align-items: center;
-  gap: 1.5em;
-  margin-bottom: 1.5em;
-}
-.about-terminal {
-  background: var(--code-bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 1.2em 1.5em;
-  margin: 1.5em 0;
-  font-size: 0.85em;
-  line-height: 1.8;
-}
-.about-terminal .prompt {
-  color: var(--accent);
-}
-.about-terminal .cmd {
-  color: var(--text);
-}
-.about-terminal .output {
-  color: var(--text-secondary);
-}
-.about-section {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 1.5em;
-  margin: 1.5em 0;
-}
-.about-section h3 {
-  margin-top: 0 !important;
-  padding: 0 !important;
-  border: none !important;
-}
-.talk-list {
-  list-style: none;
-  padding: 0;
-  margin: 0.5em 0 0;
-}
-.talk-list li {
-  padding: 0.3em 0;
-  font-size: 0.9em;
-}
-.talk-list li::before {
-  content: "$ ";
-  color: var(--accent);
-  font-weight: 700;
-}
-</style>
 
 <div class="hero-card" style="margin-bottom:2em">
     <div class="hero-accent"></div>

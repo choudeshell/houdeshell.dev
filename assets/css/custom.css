@@ -140,6 +140,10 @@ samp {
   background-color: rgba(57, 255, 110, 0.1);
   border: 1px solid rgba(57, 255, 110, 0.2);
   font-family: "JetBrains Mono", "Fira Code", "SF Mono", monospace;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.88em;
+  line-height: 2.2;
 }
 
 pre {
@@ -497,6 +501,127 @@ del, s {
   background: transparent;
   border: none;
   color: var(--text-secondary);
+}
+
+/* -- Terminal & callout blocks (blog posts) -- */
+
+.k8s-terminal,
+.about-terminal {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.2em 1.5em;
+  margin: 1.5em 0;
+  font-family: "JetBrains Mono", "Fira Code", "SF Mono", "Cascadia Code", monospace;
+  font-size: 0.82em;
+  line-height: 1.8;
+  overflow-x: auto;
+}
+
+.k8s-terminal .prompt,
+.about-terminal .prompt {
+  color: var(--accent);
+  user-select: none;
+  font-weight: 700;
+}
+
+.k8s-terminal .cmd,
+.about-terminal .cmd {
+  color: var(--text);
+}
+
+.k8s-terminal .output,
+.about-terminal .output {
+  color: var(--text-secondary);
+}
+
+.k8s-terminal .comment,
+.about-terminal .comment {
+  color: #6a7a8a;
+  font-style: italic;
+}
+
+/* YAML syntax colors in terminal blocks */
+.k8s-terminal .yaml-key {
+  color: var(--link);
+}
+
+.k8s-terminal .yaml-str {
+  color: var(--accent);
+}
+
+.k8s-terminal .yaml-val {
+  color: #e8b468;
+}
+
+.k8s-terminal .yaml-comment {
+  color: #6a7a8a;
+  font-style: italic;
+}
+
+/* Callout blocks */
+.k8s-callout {
+  background: var(--bg-card);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 1em 1.5em;
+  margin: 1.5em 0;
+  font-size: 0.9em;
+  line-height: 1.8;
+}
+
+.k8s-callout p {
+  margin-bottom: 0.8em;
+}
+
+.k8s-callout p:last-child {
+  margin-bottom: 0;
+}
+
+.k8s-callout.warning {
+  border-left-color: #ff6b6b;
+}
+
+.k8s-callout.warning strong {
+  color: #ff6b6b;
+}
+
+.k8s-callout strong {
+  color: var(--accent);
+}
+
+/* -- About page sections -- */
+
+.about-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5em;
+  margin: 1.5em 0;
+}
+
+.about-section h3 {
+  margin-top: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+.talk-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.5em 0 0;
+}
+
+.talk-list li {
+  padding: 0.3em 0;
+  font-size: 0.9em;
+  font-family: "JetBrains Mono", "Fira Code", "SF Mono", monospace;
+}
+
+.talk-list li::before {
+  content: "$ ";
+  color: var(--accent);
+  font-weight: 700;
 }
 
 /* -- Tags list page -- */
