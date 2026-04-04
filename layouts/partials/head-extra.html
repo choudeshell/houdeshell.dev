@@ -1,3 +1,24 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll("pre > code").forEach(function(code) {
+        var pre = code.parentElement;
+        var btn = document.createElement("button");
+        btn.className = "copy-btn";
+        btn.textContent = "copy";
+        btn.addEventListener("click", function() {
+            navigator.clipboard.writeText(code.textContent).then(function() {
+                btn.textContent = "copied!";
+                btn.classList.add("copied");
+                setTimeout(function() {
+                    btn.textContent = "copy";
+                    btn.classList.remove("copied");
+                }, 2000);
+            });
+        });
+        pre.appendChild(btn);
+    });
+});
+</script>

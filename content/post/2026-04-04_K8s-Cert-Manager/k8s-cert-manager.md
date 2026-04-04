@@ -10,7 +10,6 @@ bag: true
 draft: false
 ---
 
-
 *This is part two of a series for new operations and cloud engineers getting into Kubernetes. In [part one](/post/2026-04-04_k8s-tls-default-cert/k8s-tls-default-cert/) we covered how to set default TLS certificates on your ingress controllers. That works, but it means you're managing certs by hand. Let's fix that.*
 
 ---
@@ -29,35 +28,35 @@ Two options. Pick whichever matches your deployment style.
 
 ### Option 1: Helm (recommended)
 
-<div class="k8s-terminal">
-<span class="prompt">$</span> <span class="cmd">helm install cert-manager oci://quay.io/jetstack/charts/cert-manager \</span><br>
-<span class="cmd">&nbsp;&nbsp;--version v1.20.0 \</span><br>
-<span class="cmd">&nbsp;&nbsp;--namespace cert-manager \</span><br>
-<span class="cmd">&nbsp;&nbsp;--create-namespace \</span><br>
-<span class="cmd">&nbsp;&nbsp;--set crds.enabled=true</span><br>
-<br>
-<span class="output">NAME: cert-manager</span><br>
-<span class="output">NAMESPACE: cert-manager</span><br>
-<span class="output">STATUS: deployed</span>
-</div>
+```bash
+helm install cert-manager oci://quay.io/jetstack/charts/cert-manager \
+  --version v1.20.0 \
+  --namespace cert-manager \
+  --create-namespace \
+  --set crds.enabled=true
+
+# NAME: cert-manager
+# NAMESPACE: cert-manager
+# STATUS: deployed
+```
 
 ### Option 2: Static manifests
 
-<div class="k8s-terminal">
-<span class="prompt">$</span> <span class="cmd">kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.20.0/cert-manager.yaml</span>
-</div>
+```bash
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.20.0/cert-manager.yaml
+```
 
 Both methods install the same thing: the cert-manager controller, webhook, cainjector, and six CRDs. Those CRDs are the building blocks you'll use for everything else.
 
-<div class="k8s-terminal">
-<span class="comment"># Verify everything is running</span><br>
-<span class="prompt">$</span> <span class="cmd">kubectl get pods -n cert-manager</span><br>
-<br>
-<span class="output">NAME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;READY&nbsp;&nbsp;STATUS</span><br>
-<span class="output">cert-manager-5c4b5f7b9-xk2lq&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1/1&nbsp;&nbsp;&nbsp;&nbsp;Running</span><br>
-<span class="output">cert-manager-cainjector-7f694c-m8p&nbsp;1/1&nbsp;&nbsp;&nbsp;&nbsp;Running</span><br>
-<span class="output">cert-manager-webhook-7cd8c8-9tn2f&nbsp;1/1&nbsp;&nbsp;&nbsp;&nbsp;Running</span>
-</div>
+```bash
+# Verify everything is running
+kubectl get pods -n cert-manager
+
+# NAME                                       READY  STATUS
+# cert-manager-5c4b5f7b9-xk2lq              1/1    Running
+# cert-manager-cainjector-7f694c-m8p         1/1    Running
+# cert-manager-webhook-7cd8c8-9tn2f          1/1    Running
+```
 
 Three pods running. That's what you want to see.
 
@@ -82,34 +81,34 @@ Staging has much more generous limits. So you should always get your pipeline wo
 
 ### Create a staging ClusterIssuer
 
-<div class="k8s-terminal">
-<span class="comment"># staging-issuer.yaml</span><br>
-<span class="cmd">apiVersion: cert-manager.io/v1</span><br>
-<span class="cmd">kind: ClusterIssuer</span><br>
-<span class="cmd">metadata:</span><br>
-<span class="cmd">&nbsp;&nbsp;name: letsencrypt-staging</span><br>
-<span class="cmd">spec:</span><br>
-<span class="cmd">&nbsp;&nbsp;acme:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;server: https://acme-staging-v02.api.letsencrypt.org/directory</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;email: you@example.com</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;privateKeySecretRef:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name: letsencrypt-staging-account-key</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;solvers:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;- http01:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ingress:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ingressClassName: nginx</span>
-</div>
+```yaml
+# staging-issuer.yaml
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-staging
+spec:
+  acme:
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: you@example.com
+    privateKeySecretRef:
+      name: letsencrypt-staging-account-key
+    solvers:
+    - http01:
+        ingress:
+          ingressClassName: nginx
+```
 
-<div class="k8s-terminal">
-<span class="prompt">$</span> <span class="cmd">kubectl apply -f staging-issuer.yaml</span><br>
-<span class="output">clusterissuer.cert-manager.io/letsencrypt-staging created</span><br>
-<br>
-<span class="comment"># Check that it registered successfully</span><br>
-<span class="prompt">$</span> <span class="cmd">kubectl get clusterissuer letsencrypt-staging</span><br>
-<br>
-<span class="output">NAME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;READY&nbsp;&nbsp;AGE</span><br>
-<span class="output">letsencrypt-staging&nbsp;&nbsp;&nbsp;True&nbsp;&nbsp;&nbsp;30s</span>
-</div>
+```bash
+kubectl apply -f staging-issuer.yaml
+# clusterissuer.cert-manager.io/letsencrypt-staging created
+
+# Check that it registered successfully
+kubectl get clusterissuer letsencrypt-staging
+
+# NAME                  READY  AGE
+# letsencrypt-staging   True   30s
+```
 
 `READY: True` means cert-manager registered an account with Let's Encrypt staging. If you see `False`, run `kubectl describe clusterissuer letsencrypt-staging` and read the events.
 
@@ -117,23 +116,23 @@ Staging has much more generous limits. So you should always get your pipeline wo
 
 Same thing, different ACME server URL:
 
-<div class="k8s-terminal">
-<span class="comment"># production-issuer.yaml</span><br>
-<span class="cmd">apiVersion: cert-manager.io/v1</span><br>
-<span class="cmd">kind: ClusterIssuer</span><br>
-<span class="cmd">metadata:</span><br>
-<span class="cmd">&nbsp;&nbsp;name: letsencrypt-prod</span><br>
-<span class="cmd">spec:</span><br>
-<span class="cmd">&nbsp;&nbsp;acme:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;server: https://acme-v02.api.letsencrypt.org/directory</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;email: you@example.com</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;privateKeySecretRef:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name: letsencrypt-prod-account-key</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;solvers:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;- http01:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ingress:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ingressClassName: nginx</span>
-</div>
+```yaml
+# production-issuer.yaml
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: you@example.com
+    privateKeySecretRef:
+      name: letsencrypt-prod-account-key
+    solvers:
+    - http01:
+        ingress:
+          ingressClassName: nginx
+```
 
 Use separate `privateKeySecretRef` names for staging and production. The ACME accounts are completely independent. You can't reuse keys between environments.
 
@@ -165,32 +164,32 @@ This is the only way to get wildcard certificates. It's also the right choice fo
 
 If you're using the traditional Ingress API, cert-manager makes this really clean. Add an annotation to your Ingress resource, include a `tls` block, and cert-manager handles the rest.
 
-<div class="k8s-terminal">
-<span class="comment"># my-app-ingress.yaml</span><br>
-<span class="cmd">apiVersion: networking.k8s.io/v1</span><br>
-<span class="cmd">kind: Ingress</span><br>
-<span class="cmd">metadata:</span><br>
-<span class="cmd">&nbsp;&nbsp;name: my-app</span><br>
-<span class="cmd">&nbsp;&nbsp;annotations:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;cert-manager.io/cluster-issuer: letsencrypt-staging</span><br>
-<span class="cmd">spec:</span><br>
-<span class="cmd">&nbsp;&nbsp;ingressClassName: nginx</span><br>
-<span class="cmd">&nbsp;&nbsp;rules:</span><br>
-<span class="cmd">&nbsp;&nbsp;- host: app.example.com</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;http:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;paths:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- pathType: Prefix</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;path: /</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;backend:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;service:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name: my-app</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;port:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;number: 80</span><br>
-<span class="cmd">&nbsp;&nbsp;tls:</span><br>
-<span class="cmd">&nbsp;&nbsp;- hosts:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;- app.example.com</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;secretName: app-example-com-tls</span>
-</div>
+```yaml
+# my-app-ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-app
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-staging
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: app.example.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: my-app
+            port:
+              number: 80
+  tls:
+  - hosts:
+    - app.example.com
+    secretName: app-example-com-tls
+```
 
 That's it. cert-manager sees the annotation, reads the `tls` block, creates a Certificate resource, kicks off the ACME challenge, and stores the signed certificate in the `app-example-com-tls` secret. Your ingress controller picks up the secret and starts serving HTTPS.
 
@@ -212,50 +211,50 @@ If you followed the first post in this series, you know Gateway API is where thi
 
 Gateway API support is not on by default. You need to opt in.
 
-<div class="k8s-terminal">
-<span class="prompt">$</span> <span class="cmd">helm upgrade --install cert-manager oci://quay.io/jetstack/charts/cert-manager \</span><br>
-<span class="cmd">&nbsp;&nbsp;--namespace cert-manager \</span><br>
-<span class="cmd">&nbsp;&nbsp;--set crds.enabled=true \</span><br>
-<span class="cmd">&nbsp;&nbsp;--set config.enableGatewayAPI=true</span>
-</div>
+```bash
+helm upgrade --install cert-manager oci://quay.io/jetstack/charts/cert-manager \
+  --namespace cert-manager \
+  --set crds.enabled=true \
+  --set config.enableGatewayAPI=true
+```
 
 Make sure the Gateway API CRDs are installed in your cluster too:
 
-<div class="k8s-terminal">
-<span class="prompt">$</span> <span class="cmd">kubectl apply --server-side \</span><br>
-<span class="cmd">&nbsp;&nbsp;-f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.4.1/standard-install.yaml</span>
-</div>
+```bash
+kubectl apply --server-side \
+  -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.4.1/standard-install.yaml
+```
 
 If you installed the CRDs after cert-manager was already running, restart it so it picks them up:
 
-<div class="k8s-terminal">
-<span class="prompt">$</span> <span class="cmd">kubectl rollout restart deployment cert-manager -n cert-manager</span>
-</div>
+```bash
+kubectl rollout restart deployment cert-manager -n cert-manager
+```
 
 ### Annotate your Gateway
 
 The pattern is similar to Ingress. Add the annotation, reference a secret in the listener's `certificateRefs`, and cert-manager fills in the rest.
 
-<div class="k8s-terminal">
-<span class="comment"># gateway.yaml</span><br>
-<span class="cmd">apiVersion: gateway.networking.k8s.io/v1</span><br>
-<span class="cmd">kind: Gateway</span><br>
-<span class="cmd">metadata:</span><br>
-<span class="cmd">&nbsp;&nbsp;name: my-gateway</span><br>
-<span class="cmd">&nbsp;&nbsp;annotations:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;cert-manager.io/cluster-issuer: letsencrypt-prod</span><br>
-<span class="cmd">spec:</span><br>
-<span class="cmd">&nbsp;&nbsp;gatewayClassName: nginx</span><br>
-<span class="cmd">&nbsp;&nbsp;listeners:</span><br>
-<span class="cmd">&nbsp;&nbsp;- name: https</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;hostname: app.example.com</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;port: 443</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;protocol: HTTPS</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;tls:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mode: Terminate</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;certificateRefs:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- name: app-example-com-tls</span>
-</div>
+```yaml
+# gateway.yaml
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: my-gateway
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  gatewayClassName: nginx
+  listeners:
+  - name: https
+    hostname: app.example.com
+    port: 443
+    protocol: HTTPS
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - name: app-example-com-tls
+```
 
 cert-manager sees the annotation and the listener config, creates a Certificate for `app.example.com`, and stores the result in the `app-example-com-tls` secret. The Gateway picks it up and starts terminating TLS.
 
@@ -282,74 +281,74 @@ Scope it to the zone you need. Don't use a global API key if you can avoid it.
 
 ### Step 2: Store the token in your cluster
 
-<div class="k8s-terminal">
-<span class="comment"># The secret MUST be in the cert-manager namespace for ClusterIssuers</span><br>
-<span class="cmd">apiVersion: v1</span><br>
-<span class="cmd">kind: Secret</span><br>
-<span class="cmd">metadata:</span><br>
-<span class="cmd">&nbsp;&nbsp;name: cloudflare-api-token</span><br>
-<span class="cmd">&nbsp;&nbsp;namespace: cert-manager</span><br>
-<span class="cmd">type: Opaque</span><br>
-<span class="cmd">stringData:</span><br>
-<span class="cmd">&nbsp;&nbsp;api-token: your-cloudflare-api-token-here</span>
-</div>
+```yaml
+# The secret MUST be in the cert-manager namespace for ClusterIssuers
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cloudflare-api-token
+  namespace: cert-manager
+type: Opaque
+stringData:
+  api-token: your-cloudflare-api-token-here
+```
 
 That namespace bit is important. When you use a ClusterIssuer, cert-manager looks for referenced secrets in the namespace where cert-manager itself is installed. Not the namespace of your Certificate. Not the namespace of your app. The cert-manager namespace. This trips up everyone at least once.
 
 ### Step 3: Create a DNS-01 ClusterIssuer
 
-<div class="k8s-terminal">
-<span class="comment"># dns-issuer.yaml</span><br>
-<span class="cmd">apiVersion: cert-manager.io/v1</span><br>
-<span class="cmd">kind: ClusterIssuer</span><br>
-<span class="cmd">metadata:</span><br>
-<span class="cmd">&nbsp;&nbsp;name: letsencrypt-prod-dns</span><br>
-<span class="cmd">spec:</span><br>
-<span class="cmd">&nbsp;&nbsp;acme:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;server: https://acme-v02.api.letsencrypt.org/directory</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;email: you@example.com</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;privateKeySecretRef:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name: letsencrypt-prod-dns-account-key</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;solvers:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;- dns01:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cloudflare:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;apiTokenSecretRef:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name: cloudflare-api-token</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key: api-token</span>
-</div>
+```yaml
+# dns-issuer.yaml
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod-dns
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: you@example.com
+    privateKeySecretRef:
+      name: letsencrypt-prod-dns-account-key
+    solvers:
+    - dns01:
+        cloudflare:
+          apiTokenSecretRef:
+            name: cloudflare-api-token
+            key: api-token
+```
 
 ### Step 4: Request the wildcard cert
 
-<div class="k8s-terminal">
-<span class="comment"># wildcard-cert.yaml</span><br>
-<span class="cmd">apiVersion: cert-manager.io/v1</span><br>
-<span class="cmd">kind: Certificate</span><br>
-<span class="cmd">metadata:</span><br>
-<span class="cmd">&nbsp;&nbsp;name: wildcard-example-com</span><br>
-<span class="cmd">&nbsp;&nbsp;namespace: default</span><br>
-<span class="cmd">spec:</span><br>
-<span class="cmd">&nbsp;&nbsp;secretName: wildcard-example-com-tls</span><br>
-<span class="cmd">&nbsp;&nbsp;issuerRef:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;name: letsencrypt-prod-dns</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;kind: ClusterIssuer</span><br>
-<span class="cmd">&nbsp;&nbsp;dnsNames:</span><br>
-<span class="cmd">&nbsp;&nbsp;- "*.example.com"</span><br>
-<span class="cmd">&nbsp;&nbsp;- example.com</span>
-</div>
+```yaml
+# wildcard-cert.yaml
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard-example-com
+  namespace: default
+spec:
+  secretName: wildcard-example-com-tls
+  issuerRef:
+    name: letsencrypt-prod-dns
+    kind: ClusterIssuer
+  dnsNames:
+  - "*.example.com"
+  - example.com
+```
 
 Include both `*.example.com` and `example.com` in the `dnsNames`. The wildcard only covers subdomains, not the bare domain itself.
 
-<div class="k8s-terminal">
-<span class="prompt">$</span> <span class="cmd">kubectl apply -f wildcard-cert.yaml</span><br>
-<span class="output">certificate.cert-manager.io/wildcard-example-com created</span><br>
-<br>
-<span class="comment"># Watch it work</span><br>
-<span class="prompt">$</span> <span class="cmd">kubectl get certificate wildcard-example-com -w</span><br>
-<br>
-<span class="output">NAME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;READY&nbsp;&nbsp;SECRET&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AGE</span><br>
-<span class="output">wildcard-example-com&nbsp;&nbsp;&nbsp;&nbsp;False&nbsp;&nbsp;wildcard-example-com-tls&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5s</span><br>
-<span class="output">wildcard-example-com&nbsp;&nbsp;&nbsp;&nbsp;True&nbsp;&nbsp;&nbsp;wildcard-example-com-tls&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;47s</span>
-</div>
+```bash
+kubectl apply -f wildcard-cert.yaml
+# certificate.cert-manager.io/wildcard-example-com created
+
+# Watch it work
+kubectl get certificate wildcard-example-com -w
+
+# NAME                    READY  SECRET                        AGE
+# wildcard-example-com    False  wildcard-example-com-tls      5s
+# wildcard-example-com    True   wildcard-example-com-tls      47s
+```
 
 DNS-01 is slower than HTTP-01 because of DNS propagation. Give it a minute or two. If it takes more than five minutes, start troubleshooting (see below).
 
@@ -359,26 +358,26 @@ They will. Here's how to figure out what happened.
 
 cert-manager has a chain of resources that it creates when processing a certificate request. Follow the chain from top to bottom:
 
-<div class="k8s-terminal">
-<span class="comment"># 1. Is the Certificate ready?</span><br>
-<span class="prompt">$</span> <span class="cmd">kubectl get certificates -A</span><br>
-<br>
-<span class="comment"># 2. What does the CertificateRequest say?</span><br>
-<span class="prompt">$</span> <span class="cmd">kubectl get certificaterequest -A</span><br>
-<span class="prompt">$</span> <span class="cmd">kubectl describe certificaterequest &lt;name&gt; -n &lt;namespace&gt;</span><br>
-<br>
-<span class="comment"># 3. Is the Issuer healthy?</span><br>
-<span class="prompt">$</span> <span class="cmd">kubectl get clusterissuer</span><br>
-<span class="prompt">$</span> <span class="cmd">kubectl describe clusterissuer &lt;name&gt;</span><br>
-<br>
-<span class="comment"># 4. For Let's Encrypt: check the ACME Order and Challenge</span><br>
-<span class="prompt">$</span> <span class="cmd">kubectl get orders -A</span><br>
-<span class="prompt">$</span> <span class="cmd">kubectl get challenges -A</span><br>
-<span class="prompt">$</span> <span class="cmd">kubectl describe challenge &lt;name&gt; -n &lt;namespace&gt;</span><br>
-<br>
-<span class="comment"># 5. Check the cert-manager logs</span><br>
-<span class="prompt">$</span> <span class="cmd">kubectl logs -n cert-manager deployment/cert-manager --tail=100</span>
-</div>
+```bash
+# 1. Is the Certificate ready?
+kubectl get certificates -A
+
+# 2. What does the CertificateRequest say?
+kubectl get certificaterequest -A
+kubectl describe certificaterequest <name> -n <namespace>
+
+# 3. Is the Issuer healthy?
+kubectl get clusterissuer
+kubectl describe clusterissuer <name>
+
+# 4. For Let's Encrypt: check the ACME Order and Challenge
+kubectl get orders -A
+kubectl get challenges -A
+kubectl describe challenge <name> -n <namespace>
+
+# 5. Check the cert-manager logs
+kubectl logs -n cert-manager deployment/cert-manager --tail=100
+```
 
 Most problems fall into a handful of categories:
 
@@ -386,11 +385,11 @@ Most problems fall into a handful of categories:
 
 **DNS propagation timeout (DNS-01).** The TXT record was created but Let's Encrypt can't see it yet. If your cluster's DNS resolver is slow, you can point cert-manager at public resolvers:
 
-<div class="k8s-terminal">
-<span class="prompt">$</span> <span class="cmd">helm upgrade cert-manager oci://quay.io/jetstack/charts/cert-manager \</span><br>
-<span class="cmd">&nbsp;&nbsp;--namespace cert-manager \</span><br>
-<span class="cmd">&nbsp;&nbsp;--set 'extraArgs={--dns01-recursive-nameservers-only,--dns01-recursive-nameservers=1.1.1.1:53\,9.9.9.9:53}'</span>
-</div>
+```bash
+helm upgrade cert-manager oci://quay.io/jetstack/charts/cert-manager \
+  --namespace cert-manager \
+  --set 'extraArgs={--dns01-recursive-nameservers-only,--dns01-recursive-nameservers=1.1.1.1:53\,9.9.9.9:53}'
+```
 
 **Secret in the wrong namespace.** The number one DNS-01 headache. ClusterIssuers look for API token secrets in the cert-manager namespace. Not your app namespace. Not default.
 

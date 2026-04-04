@@ -10,7 +10,6 @@ bag: true
 draft: false
 ---
 
-
 *This is the first post in a series for new operations and cloud engineers getting started with Kubernetes. Whether you're running K3s on a Raspberry Pi, EKS in AWS, AKS in Azure, or anything in between — the concepts are the same. Let's get into it.*
 
 ---
@@ -29,15 +28,15 @@ Every controller does this slightly differently. Let's walk through each one.
 
 This part is the same regardless of which controller you're running. You need a Kubernetes TLS secret containing your certificate and private key.
 
-<div class="k8s-terminal">
-<span class="comment"># Create the TLS secret from your cert and key files</span><br>
-<span class="prompt">$</span> <span class="cmd">kubectl create secret tls default-tls \</span><br>
-<span class="cmd">&nbsp;&nbsp;--cert=tls.crt \</span><br>
-<span class="cmd">&nbsp;&nbsp;--key=tls.key \</span><br>
-<span class="cmd">&nbsp;&nbsp;-n default</span><br>
-<br>
-<span class="output">secret/default-tls created</span>
-</div>
+```bash
+# Create the TLS secret from your cert and key files
+kubectl create secret tls default-tls \
+  --cert=tls.crt \
+  --key=tls.key \
+  -n default
+
+# secret/default-tls created
+```
 
 Your cert file should contain the full chain: leaf → intermediate → root. If you're using cert-manager or Let's Encrypt, this is handled for you. If you're doing it by hand — get the order right or you'll be debugging trust chain errors at 2am.
 
@@ -63,30 +62,30 @@ Even though it's retired, you'll encounter this in the wild for a while. The def
 
 **With Helm:**
 
-<div class="k8s-terminal">
-<span class="comment"># values.yaml</span><br>
-<span class="cmd">controller:</span><br>
-<span class="cmd">&nbsp;&nbsp;extraArgs:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;default-ssl-certificate: "default/default-tls"</span>
-</div>
+```yaml
+# values.yaml
+controller:
+  extraArgs:
+    default-ssl-certificate: "default/default-tls"
+```
 
-<div class="k8s-terminal">
-<span class="prompt">$</span> <span class="cmd">helm upgrade ingress-nginx ingress-nginx/ingress-nginx \</span><br>
-<span class="cmd">&nbsp;&nbsp;-f values.yaml \</span><br>
-<span class="cmd">&nbsp;&nbsp;-n ingress-nginx</span>
-</div>
+```bash
+helm upgrade ingress-nginx ingress-nginx/ingress-nginx \
+  -f values.yaml \
+  -n ingress-nginx
+```
 
 **Without Helm** — patch the controller deployment directly:
 
-<div class="k8s-terminal">
-<span class="comment"># Add to the container args in the ingress-nginx-controller Deployment</span><br>
-<span class="cmd">spec:</span><br>
-<span class="cmd">&nbsp;&nbsp;containers:</span><br>
-<span class="cmd">&nbsp;&nbsp;- name: controller</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;args:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;- /nginx-ingress-controller</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;- --default-ssl-certificate=default/default-tls</span>
-</div>
+```yaml
+# Add to the container args in the ingress-nginx-controller Deployment
+spec:
+  containers:
+  - name: controller
+    args:
+    - /nginx-ingress-controller
+    - --default-ssl-certificate=default/default-tls
+```
 
 The format is `namespace/secret-name`. Without this flag, NGINX generates a self-signed certificate for the catch-all server — that's the browser warning you're seeing.
 
@@ -100,27 +99,26 @@ There are two HAProxy ingress projects — the community [haproxy-ingress](https
 
 **With Helm (HAProxy Technologies):**
 
-<div class="k8s-terminal">
-<span class="comment"># values.yaml</span><br>
-<span class="cmd">controller:</span><br>
-<span class="cmd">&nbsp;&nbsp;defaultTLSSecret:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;secretNamespace: default</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;secret: default-tls</span>
-</div>
+```yaml
+# values.yaml
+controller:
+  defaultTLSSecret:
+    secretNamespace: default
+    secret: default-tls
+```
 
 **With controller args (both projects):**
 
-<div class="k8s-terminal">
-<span class="comment"># Same flag format as NGINX</span><br>
-<span class="cmd">--default-ssl-certificate=default/default-tls</span>
-</div>
+```text
+--default-ssl-certificate=default/default-tls
+```
 
-<div class="k8s-terminal">
-<span class="prompt">$</span> <span class="cmd">helm upgrade haproxy-ingress haproxytech/kubernetes-ingress \</span><br>
-<span class="cmd">&nbsp;&nbsp;--set controller.defaultTLSSecret.secretNamespace=default \</span><br>
-<span class="cmd">&nbsp;&nbsp;--set controller.defaultTLSSecret.secret=default-tls \</span><br>
-<span class="cmd">&nbsp;&nbsp;-n haproxy-ingress</span>
-</div>
+```bash
+helm upgrade haproxy-ingress haproxytech/kubernetes-ingress \
+  --set controller.defaultTLSSecret.secretNamespace=default \
+  --set controller.defaultTLSSecret.secret=default-tls \
+  -n haproxy-ingress
+```
 
 Without a default cert configured, both HAProxy implementations generate a self-signed fake certificate — same story as NGINX.
 
@@ -134,42 +132,42 @@ Istio doesn't use the Kubernetes Ingress API at all. It has its own `Gateway` CR
 
 **Important:** The TLS secret **must live in the same namespace as the Istio ingress gateway pod** — typically `istio-system`.
 
-<div class="k8s-terminal">
-<span class="prompt">$</span> <span class="cmd">kubectl create secret tls default-tls \</span><br>
-<span class="cmd">&nbsp;&nbsp;--cert=tls.crt \</span><br>
-<span class="cmd">&nbsp;&nbsp;--key=tls.key \</span><br>
-<span class="cmd">&nbsp;&nbsp;-n istio-system</span><br>
-<br>
-<span class="output">secret/default-tls created</span>
-</div>
+```bash
+kubectl create secret tls default-tls \
+  --cert=tls.crt \
+  --key=tls.key \
+  -n istio-system
+
+# secret/default-tls created
+```
 
 Then create the Gateway resource:
 
-<div class="k8s-terminal">
-<span class="comment"># istio-gateway.yaml</span><br>
-<span class="cmd">apiVersion: networking.istio.io/v1</span><br>
-<span class="cmd">kind: Gateway</span><br>
-<span class="cmd">metadata:</span><br>
-<span class="cmd">&nbsp;&nbsp;name: default-gateway</span><br>
-<span class="cmd">spec:</span><br>
-<span class="cmd">&nbsp;&nbsp;selector:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;istio: ingressgateway</span><br>
-<span class="cmd">&nbsp;&nbsp;servers:</span><br>
-<span class="cmd">&nbsp;&nbsp;- port:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;number: 443</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name: https</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;protocol: HTTPS</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;tls:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mode: SIMPLE</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;credentialName: default-tls</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;hosts:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;- "*.example.com"</span>
-</div>
+```yaml
+# istio-gateway.yaml
+apiVersion: networking.istio.io/v1
+kind: Gateway
+metadata:
+  name: default-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    tls:
+      mode: SIMPLE
+      credentialName: default-tls
+    hosts:
+    - "*.example.com"
+```
 
-<div class="k8s-terminal">
-<span class="prompt">$</span> <span class="cmd">kubectl apply -f istio-gateway.yaml</span><br>
-<span class="output">gateway.networking.istio.io/default-gateway created</span>
-</div>
+```bash
+kubectl apply -f istio-gateway.yaml
+# gateway.networking.istio.io/default-gateway created
+```
 
 **Gotchas:**
 - `credentialName` must exactly match the Kubernetes secret name. No `namespace/name` format here — it just looks in its own namespace.
@@ -188,77 +186,77 @@ The big difference: there's no `--default-ssl-certificate` flag. TLS is configur
 
 NGINX Gateway Fabric is NGINX's Gateway API implementation — completely separate from the retired Ingress NGINX project.
 
-<div class="k8s-terminal">
-<span class="comment"># gateway.yaml</span><br>
-<span class="cmd">apiVersion: gateway.networking.k8s.io/v1</span><br>
-<span class="cmd">kind: Gateway</span><br>
-<span class="cmd">metadata:</span><br>
-<span class="cmd">&nbsp;&nbsp;name: default-gateway</span><br>
-<span class="cmd">spec:</span><br>
-<span class="cmd">&nbsp;&nbsp;gatewayClassName: nginx</span><br>
-<span class="cmd">&nbsp;&nbsp;listeners:</span><br>
-<span class="cmd">&nbsp;&nbsp;- name: http</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;port: 80</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;protocol: HTTP</span><br>
-<span class="cmd">&nbsp;&nbsp;- name: https</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;hostname: "*.example.com"</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;port: 443</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;protocol: HTTPS</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;tls:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mode: Terminate</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;certificateRefs:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- kind: Secret</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name: default-tls</span>
-</div>
+```yaml
+# gateway.yaml
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: default-gateway
+spec:
+  gatewayClassName: nginx
+  listeners:
+  - name: http
+    port: 80
+    protocol: HTTP
+  - name: https
+    hostname: "*.example.com"
+    port: 443
+    protocol: HTTPS
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        name: default-tls
+```
 
-<div class="k8s-terminal">
-<span class="prompt">$</span> <span class="cmd">kubectl apply -f gateway.yaml</span><br>
-<span class="output">gateway.gateway.networking.k8s.io/default-gateway created</span>
-</div>
+```bash
+kubectl apply -f gateway.yaml
+# gateway.gateway.networking.k8s.io/default-gateway created
+```
 
 Then attach your HTTPRoutes to the HTTPS listener:
 
-<div class="k8s-terminal">
-<span class="comment"># route.yaml</span><br>
-<span class="cmd">apiVersion: gateway.networking.k8s.io/v1</span><br>
-<span class="cmd">kind: HTTPRoute</span><br>
-<span class="cmd">metadata:</span><br>
-<span class="cmd">&nbsp;&nbsp;name: my-app</span><br>
-<span class="cmd">spec:</span><br>
-<span class="cmd">&nbsp;&nbsp;parentRefs:</span><br>
-<span class="cmd">&nbsp;&nbsp;- name: default-gateway</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;sectionName: https</span><br>
-<span class="cmd">&nbsp;&nbsp;hostnames:</span><br>
-<span class="cmd">&nbsp;&nbsp;- "app.example.com"</span><br>
-<span class="cmd">&nbsp;&nbsp;rules:</span><br>
-<span class="cmd">&nbsp;&nbsp;- backendRefs:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;- name: my-app</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;port: 80</span>
-</div>
+```yaml
+# route.yaml
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: my-app
+spec:
+  parentRefs:
+  - name: default-gateway
+    sectionName: https
+  hostnames:
+  - "app.example.com"
+  rules:
+  - backendRefs:
+    - name: my-app
+      port: 80
+```
 
 **With cert-manager** — add an annotation and cert-manager handles the rest:
 
-<div class="k8s-terminal">
-<span class="comment"># gateway.yaml — cert-manager will create and manage the secret</span><br>
-<span class="cmd">apiVersion: gateway.networking.k8s.io/v1</span><br>
-<span class="cmd">kind: Gateway</span><br>
-<span class="cmd">metadata:</span><br>
-<span class="cmd">&nbsp;&nbsp;name: default-gateway</span><br>
-<span class="cmd">&nbsp;&nbsp;annotations:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;cert-manager.io/cluster-issuer: letsencrypt-prod</span><br>
-<span class="cmd">spec:</span><br>
-<span class="cmd">&nbsp;&nbsp;gatewayClassName: nginx</span><br>
-<span class="cmd">&nbsp;&nbsp;listeners:</span><br>
-<span class="cmd">&nbsp;&nbsp;- name: https</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;hostname: "app.example.com"</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;port: 443</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;protocol: HTTPS</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;tls:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mode: Terminate</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;certificateRefs:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- kind: Secret</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name: default-tls</span>
-</div>
+```yaml
+# gateway.yaml — cert-manager will create and manage the secret
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: default-gateway
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  gatewayClassName: nginx
+  listeners:
+  - name: https
+    hostname: "app.example.com"
+    port: 443
+    protocol: HTTPS
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        name: default-tls
+```
 
 ---
 
@@ -266,30 +264,30 @@ Then attach your HTTPRoutes to the HTTPS listener:
 
 The beauty of Gateway API is that it's a standard. The Gateway resource looks almost identical regardless of the underlying implementation — you just swap the `gatewayClassName`.
 
-<div class="k8s-terminal">
-<span class="comment"># gateway.yaml — same pattern, different class</span><br>
-<span class="cmd">apiVersion: gateway.networking.k8s.io/v1</span><br>
-<span class="cmd">kind: Gateway</span><br>
-<span class="cmd">metadata:</span><br>
-<span class="cmd">&nbsp;&nbsp;name: default-gateway</span><br>
-<span class="cmd">spec:</span><br>
-<span class="cmd">&nbsp;&nbsp;gatewayClassName: haproxy</span><br>
-<span class="cmd">&nbsp;&nbsp;listeners:</span><br>
-<span class="cmd">&nbsp;&nbsp;- name: https</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;hostname: "*.example.com"</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;port: 443</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;protocol: HTTPS</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;tls:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mode: Terminate</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;certificateRefs:</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- kind: Secret</span><br>
-<span class="cmd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name: default-tls</span>
-</div>
+```yaml
+# gateway.yaml — same pattern, different class
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: default-gateway
+spec:
+  gatewayClassName: haproxy
+  listeners:
+  - name: https
+    hostname: "*.example.com"
+    port: 443
+    protocol: HTTPS
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        name: default-tls
+```
 
-<div class="k8s-terminal">
-<span class="prompt">$</span> <span class="cmd">kubectl apply -f gateway.yaml</span><br>
-<span class="output">gateway.gateway.networking.k8s.io/default-gateway created</span>
-</div>
+```bash
+kubectl apply -f gateway.yaml
+# gateway.gateway.networking.k8s.io/default-gateway created
+```
 
 That's it. Same spec. Same structure. The `gatewayClassName` tells Kubernetes which controller reconciles the resource. This is exactly why Gateway API is the future — you can swap implementations without rewriting your config.
 
