@@ -11,6 +11,9 @@
   --accent: #39ff6e;
   --accent-hover: #5cff8a;
   --accent-bright: #72ffa0;
+  --link: #00d0ff;
+  --link-hover: #33dbff;
+  --link-underline: rgba(0, 208, 255, 0.4);
   --border: #1e2a3d;
   --border-light: #182233;
   --code-bg: #121a28;
@@ -66,17 +69,17 @@ b {
 /* -- Links -- */
 
 a {
-  color: var(--accent);
+  color: var(--link);
   text-decoration-line: underline;
   text-decoration-style: solid;
-  text-decoration-color: rgba(57, 255, 110, 0.4);
+  text-decoration-color: var(--link-underline);
   text-underline-offset: 3px;
   text-decoration-thickness: 2px;
 }
 
 a:hover {
-  color: var(--accent-hover);
-  text-decoration-color: var(--accent-bright);
+  color: var(--link-hover);
+  text-decoration-color: var(--link-hover);
   text-decoration-thickness: 2px;
 }
 
@@ -308,17 +311,17 @@ mark {
 /* -- Pagination -- */
 
 .pagination ul li a {
-  color: var(--accent);
+  color: var(--link);
   border-radius: 4px;
 }
 
 .pagination ul li a.active {
-  background-color: var(--accent);
-  color: #fff;
+  background-color: var(--link);
+  color: var(--bg);
 }
 
 .pagination ul li a:hover:not(.active) {
-  background-color: rgba(57, 255, 110, 0.15);
+  background-color: rgba(0, 208, 255, 0.15);
 }
 
 /* -- License box -- */
