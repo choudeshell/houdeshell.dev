@@ -64,23 +64,31 @@ section = "about"
 }
 </style>
 
-## `whoami`
-
-Hello. I'm Chris Houdeshell. I'm a bit herder, a pointer wrecker, and HTTP is my best friend. `0xA3` & `0x7C` are also my friends, but not `0x08`.
-
-I spend my days somewhere between writing code and making sure other people can write better code. I love distributed systems, low-level embedded devices, and anything that has a `content-type`. I also have an unhealthy relationship with YAML — but that's a Kubernetes problem.
-
-<div class="about-terminal">
-<span class="prompt">~</span> <span class="cmd">cat /etc/career.conf</span><br>
-<span class="output">
-ROLE="VP of Engineering and Operations"<br>
-COMPANY="EnergyCAP"<br>
-LOCATION="State College, PA"<br>
-TENURE="15+ years"<br>
-STACK="dotnet, postgres, k8s, azure, too-much-sql"<br>
-COFFEE_INTAKE="dangerously high"<br>
-</span>
+<div class="hero-card" style="margin-bottom:2em">
+    <div class="hero-accent"></div>
+    <div class="hero-content">
+        <p class="hero-greeting">whoami</p>
+        <p class="hero-name">Chris <span class="hero-hl">Houdeshell</span></p>
+        <p class="hero-tagline">bit herder. pointer wrecker. yaml apologist.</p>
+        <div class="hero-divider"></div>
+        <p class="hero-currently"><span class="hero-label">stack:</span> dotnet, postgres, k8s, azure, too-much-sql</p>
+        <p class="hero-currently"><span class="hero-label">location:</span> State College, PA</p>
+        <p class="hero-currently"><span class="hero-label">coffee intake:</span> dangerously high</p>
+        <div class="hero-links">
+            <a href="https://github.com/choudeshell">github</a>
+            <span class="hero-sep">/</span>
+            <a href="https://www.linkedin.com/in/choudeshell/">linkedin</a>
+            <span class="hero-sep">/</span>
+            <a href="https://sessionize.com/choudeshell/">talks</a>
+            <span class="hero-sep">/</span>
+            <a href="mailto:chris@houdeshell.dev">email</a>
+        </div>
+    </div>
 </div>
+
+I'm a bit herder, a pointer wrecker, and HTTP is my best friend. `0xA3` & `0x7C` are also my friends, but not `0x08`.
+
+I spend my days somewhere between writing code and making sure other people can write better code. I love distributed systems, low-level embedded devices, and anything that has a `content-type`. I also have an unhealthy relationship with YAML, but that's a Kubernetes problem.
 
 ## The day job
 
