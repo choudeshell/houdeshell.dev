@@ -8,13 +8,13 @@
       {{- $relURL := replace .RelPermalink "#" "%23" -}}
       {{- $relURL = replace $relURL "." "%2e" -}}
     <li class="item">
-        <article class="article markdown-body post-card">
         {{ if .Params.external }}
-        <a class="note" href="{{- .Params.externalUrl -}}">
+        <a class="post-card-link" href="{{- .Params.externalUrl -}}">
         {{else}}
-        <a class="note" href="{{- $relURL -}}">
+        <a class="post-card-link" href="{{- $relURL -}}">
         {{end}}
-            <p class="note title">{{- .Title | safeHTML -}} {{ if .Params.external }} ⇗{{end}}</p></a>
+        <article class="article markdown-body post-card">
+            <p class="note title">{{- .Title | safeHTML -}} {{ if .Params.external }} ⇗{{end}}</p>
             {{- if .Lastmod -}}
                 <p class="note date">{{- .Lastmod.Format $dateFormat -}}</p>
             {{- end -}}
@@ -23,11 +23,12 @@
             {{- end -}}
             {{- if .Truncated -}}
             <div class="note read-more">
-                <a href="{{ .RelPermalink }}">Read more &rarr;</a>
+                <span>Read more &rarr;</span>
             </div>
             {{- end -}}
+        </article>
+        </a>
         {{- partial "note-labels.html" . -}}
-    </article>
     </li>
     {{- end -}}
 </ul>
