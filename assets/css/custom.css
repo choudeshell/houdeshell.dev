@@ -3,26 +3,26 @@
    ============================================ */
 
 :root {
-  color-scheme: light;
-  --bg: #fafafa;
-  --bg-card: #ffffff;
-  --text: #1a1a2e;
-  --text-secondary: #4a4a6a;
-  --accent: #ff3a6c;
-  --accent-hover: #e62e5c;
-  --accent-bright: #ff6b8a;
-  --border: #d0d7de;
-  --border-light: #e8ecf0;
-  --code-bg: #f0f4f8;
-  --code-text: #0a3069;
-  --header-bg: #f6f8fa;
-  --highlight: #ff3a6c;
-  --tag-bg: #fff0f3;
-  --tag-text: #e62e5c;
-  --blockquote-border: #ff6b8a;
-  --blockquote-text: #57606a;
-  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
-  --card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+  color-scheme: dark;
+  --bg: #0f1623;
+  --bg-card: #161d2e;
+  --text: #e0e4ef;
+  --text-secondary: #dde0e8;
+  --accent: #39ff6e;
+  --accent-hover: #5cff8a;
+  --accent-bright: #72ffa0;
+  --border: #1e2a3d;
+  --border-light: #182233;
+  --code-bg: #121a28;
+  --code-text: #5cff8a;
+  --header-bg: #121a28;
+  --highlight: #39ff6e;
+  --tag-bg: rgba(57, 255, 110, 0.12);
+  --tag-text: #5cff8a;
+  --blockquote-border: #39ff6e;
+  --blockquote-text: #dde0e8;
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+  --card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 /* -- Base --  */
@@ -39,18 +39,18 @@ body {
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 58, 108, 0.25);
+  background-color: rgba(57, 255, 110, 0.3);
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(255, 58, 108, 0.45);
+  background-color: rgba(57, 255, 110, 0.5);
 }
 
 /* -- Typography -- */
 
 html {
   font-family: "JetBrains Mono", "Fira Code", "SF Mono", "Cascadia Code", monospace;
-  font-size: 17px;
+  font-size: 18px;
 }
 
 body {
@@ -69,7 +69,7 @@ a {
   color: var(--accent);
   text-decoration-line: underline;
   text-decoration-style: solid;
-  text-decoration-color: rgba(255, 107, 138, 0.5);
+  text-decoration-color: rgba(57, 255, 110, 0.4);
   text-underline-offset: 3px;
   text-decoration-thickness: 2px;
 }
@@ -134,8 +134,8 @@ kbd,
 tt,
 samp {
   color: var(--accent-hover);
-  background-color: rgba(255, 58, 108, 0.08);
-  border: 1px solid rgba(255, 58, 108, 0.2);
+  background-color: rgba(57, 255, 110, 0.1);
+  border: 1px solid rgba(57, 255, 110, 0.2);
   font-family: "JetBrains Mono", "Fira Code", "SF Mono", monospace;
 }
 
@@ -174,7 +174,7 @@ table tr:nth-child(even) {
 /* -- Highlight / mark -- */
 
 mark {
-  background-color: rgba(255, 58, 108, 0.2);
+  background-color: rgba(57, 255, 110, 0.25);
   color: var(--text);
 }
 
@@ -256,7 +256,7 @@ mark {
 
 .article.markdown-body blockquote {
   border-left: 4px solid var(--blockquote-border);
-  background-color: rgba(255, 58, 108, 0.06);
+  background-color: rgba(57, 255, 110, 0.08);
   padding: 0.5em 1em;
   border-radius: 0 6px 6px 0;
 }
@@ -286,14 +286,23 @@ mark {
 /* -- Tags & categories -- */
 
 .tag {
-  color: var(--tag-text);
+  color: var(--tag-text) !important;
   font-family: "JetBrains Mono", "Fira Code", monospace;
   font-size: 0.85em;
 }
 
+.tag:hover {
+  color: var(--accent-bright) !important;
+  opacity: 1;
+}
+
 .category {
-  color: #fff;
-  background-color: var(--accent);
+  color: var(--bg) !important;
+  background-color: var(--accent) !important;
+}
+
+.category:hover {
+  opacity: 0.8;
 }
 
 /* -- Pagination -- */
@@ -309,7 +318,7 @@ mark {
 }
 
 .pagination ul li a:hover:not(.active) {
-  background-color: rgba(255, 58, 108, 0.1);
+  background-color: rgba(57, 255, 110, 0.15);
 }
 
 /* -- License box -- */
@@ -350,7 +359,7 @@ mark {
 /* -- Selection -- */
 
 ::selection {
-  background: rgba(255, 58, 108, 0.3);
+  background: rgba(57, 255, 110, 0.35);
   color: var(--text);
 }
 
@@ -406,6 +415,17 @@ del, s {
   padding: 2em 0 2em;
   border-top: 1px solid var(--border-light);
   margin-top: 2em;
+}
+
+.footer-ascii {
+  color: var(--accent-bright);
+  opacity: 0.35;
+  font-size: 0.75em;
+  border: none;
+  background: transparent;
+  margin: 0 0 1.5em;
+  letter-spacing: 0.1em;
+  text-align: center;
 }
 
 .footer-slogan {
