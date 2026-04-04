@@ -414,11 +414,30 @@ mark {
   color: var(--text);
 }
 
-/* -- Nav hover -- */
+/* -- Nav items -- */
+
+.nav.item {
+  padding: 4px 8px;
+  transition: color 0.2s ease;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
 
 .nav.item:hover {
   color: var(--accent-bright);
   opacity: 1;
+}
+
+.nav.item.active {
+  color: var(--accent);
+}
+
+.nav.item i {
+  margin-right: 2px;
+  font-size: 1.1em;
+  vertical-align: -1px;
 }
 
 /* -- Strikethrough styling -- */
