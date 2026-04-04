@@ -1,0 +1,19 @@
+{{- define "main" -}}
+
+{{- $title := T .Title -}}
+{{- if not $title -}}
+{{- $title = .Title -}}
+{{- end -}}
+<section class="article header"><h1>{{- $title -}}</h1></section>
+
+<div class="tags-grid">
+    {{- range .Data.Terms.ByCount -}}
+    {{ $count := .Count }}
+    <a class="tag-card" href="{{ .Page.RelPermalink }}">
+        <span class="tag-name">#{{ .Page.Title | lower }}</span>
+        <span class="tag-count">{{ $count }} {{ if eq $count 1 }}post{{ else }}posts{{ end }}</span>
+    </a>
+    {{- end -}}
+</div>
+
+{{- end -}}

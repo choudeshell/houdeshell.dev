@@ -1,0 +1,45 @@
+{{- define "main" -}}
+
+{{- $paginator := .Paginate (where site.RegularPages "Type" "in" site.Params.mainSections) 5 -}}
+
+{{- if eq $paginator.PageNumber 1 -}}
+{{- $latest := index $paginator.Pages 0 -}}
+<section class="hero">
+    <div class="hero-card">
+        <div class="hero-accent"></div>
+        <div class="hero-content">
+            <p class="hero-greeting">Hi! I'm</p>
+            <p class="hero-name">Chris <span class="hero-hl">Houdeshell</span></p>
+            <p class="hero-tagline">bit herder. pointer wrecker. yaml apologist.</p>
+            <div class="hero-divider"></div>
+            <p class="hero-slogan">{{ site.Params.slogan }}</p>
+            <p class="hero-currently"><span class="hero-label">currently:</span> deep in k8s and cloud, poking at eBPF, tuning kernel params, mass producing yaml</p>
+            {{- with $latest -}}
+            <p class="hero-latest"><span class="hero-label">latest post:</span> <a href="{{ .RelPermalink }}">{{ .Title }}</a></p>
+            {{- end -}}
+            <div class="hero-links">
+                <a href="https://github.com/choudeshell">github</a>
+                <span class="hero-sep">/</span>
+                <a href="https://www.linkedin.com/in/choudeshell/">linkedin</a>
+                <span class="hero-sep">/</span>
+                <a href="https://sessionize.com/choudeshell/">talks</a>
+                <span class="hero-sep">/</span>
+                <a href="/about/">about</a>
+            </div>
+        </div>
+    </div>
+</section>
+{{- end -}}
+
+<section class="posts-section">
+    {{- if eq $paginator.PageNumber 1 -}}
+    <h2 class="posts-heading">Recent Posts</h2>
+    {{- else -}}
+    <h2 class="posts-heading">Posts <span class="posts-page">page {{ $paginator.PageNumber }}</span></h2>
+    {{- end -}}
+
+    {{- partial "note-list.html" $paginator -}}
+    {{- partial "pagination.html" $paginator -}}
+</section>
+
+{{- end -}}

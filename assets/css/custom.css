@@ -188,6 +188,7 @@ mark {
   border: none;
   border-radius: 0;
   box-shadow: none;
+  list-style: none;
 }
 
 .note.title {
@@ -236,7 +237,13 @@ mark {
   color: var(--text);
 }
 
-.article.markdown-body h3,
+.article.markdown-body h3 {
+  border-left: 2px solid var(--accent);
+  padding-left: 10px;
+  color: var(--accent-hover);
+  font-size: 1.1em;
+}
+
 .article.markdown-body h4 {
   color: var(--accent-hover);
 }
@@ -289,14 +296,22 @@ mark {
 /* -- Tags & categories -- */
 
 .tag {
-  color: var(--tag-text) !important;
+  color: var(--accent) !important;
   font-family: "JetBrains Mono", "Fira Code", monospace;
-  font-size: 0.85em;
+  font-size: 0.75em;
+  border: 1px solid var(--accent) !important;
+  border-radius: 3px;
+  padding: 2px 8px;
+  text-decoration: none !important;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
 }
 
 .tag:hover {
   color: var(--accent-bright) !important;
+  border-color: var(--accent-bright) !important;
   opacity: 1;
+  text-decoration: none !important;
 }
 
 .category {
@@ -482,4 +497,193 @@ del, s {
   background: transparent;
   border: none;
   color: var(--text-secondary);
+}
+
+/* -- Tags list page -- */
+
+.tags-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 1.5em 0;
+}
+
+.tag-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1em 1.2em;
+  text-decoration: none !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tag-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 16px rgba(57, 255, 110, 0.08);
+}
+
+.tag-card .tag-name {
+  color: var(--accent);
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-size: 0.95em;
+  font-weight: 600;
+}
+
+.tag-card .tag-count {
+  color: var(--text-secondary);
+  font-size: 0.75em;
+  margin-top: 0.3em;
+  opacity: 0.7;
+}
+
+/* -- Homepage hero -- */
+
+.hero {
+  margin: 0 0 2.5em;
+}
+
+.hero-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: flex;
+  overflow: hidden;
+}
+
+.hero-accent {
+  width: 4px;
+  flex-shrink: 0;
+  background: linear-gradient(180deg, var(--accent), var(--link));
+}
+
+.hero-content {
+  padding: 2em 2em;
+}
+
+.hero-name {
+  font-size: 2.2em;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.hero-hl {
+  color: var(--accent);
+}
+
+.hero-tagline {
+  color: var(--text-secondary);
+  font-size: 0.85em;
+  margin: 0.6em 0 0;
+  letter-spacing: 0.04em;
+}
+
+.hero-divider {
+  width: 50px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--link));
+  margin: 1.4em 0;
+  border-radius: 1px;
+}
+
+.hero-greeting {
+  color: var(--text-secondary);
+  font-size: 0.9em;
+  margin: 0 0 0.1em;
+}
+
+.hero-slogan {
+  color: var(--link);
+  font-size: 0.85em;
+  margin: 0 0 1em;
+  font-style: italic;
+}
+
+.hero-currently,
+.hero-latest {
+  font-size: 0.8em;
+  color: var(--text-secondary);
+  margin: 0.3em 0;
+}
+
+.hero-latest a {
+  text-decoration: none;
+}
+
+.hero-label {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.hero-links {
+  margin-top: 1.2em;
+  font-size: 0.8em;
+}
+
+.hero-links a {
+  color: var(--link);
+  text-decoration: none;
+}
+
+.hero-links a:hover {
+  color: var(--link-hover);
+}
+
+.hero-sep {
+  color: var(--border);
+  margin: 0 0.5em;
+}
+
+/* -- Homepage posts section -- */
+
+.posts-heading {
+  border-left: 3px solid var(--accent-bright);
+  padding-left: 10px;
+  font-size: 1.2em;
+  margin-bottom: 1em;
+}
+
+.posts-heading .posts-page {
+  color: var(--text-secondary);
+  font-size: 0.7em;
+  font-weight: 400;
+}
+
+/* -- Post cards -- */
+
+.post-card {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  padding: 1.5em !important;
+  margin-bottom: 0.5em;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.post-card:hover {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 16px rgba(57, 255, 110, 0.06);
+}
+
+.note.list .item {
+  margin-bottom: 0;
+}
+
+.note .read-more {
+  margin-top: 0.8em;
+}
+
+.note .read-more a {
+  color: var(--accent);
+  font-size: 0.85em;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.note .read-more a:hover {
+  color: var(--accent-bright);
 }

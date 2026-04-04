@@ -8,32 +8,24 @@
       {{- $relURL := replace .RelPermalink "#" "%23" -}}
       {{- $relURL = replace $relURL "." "%2e" -}}
     <li class="item">
-        <article class="article markdown-body">
+        <article class="article markdown-body post-card">
         {{ if .Params.external }}
         <a class="note" href="{{- .Params.externalUrl -}}">
         {{else}}
         <a class="note" href="{{- $relURL -}}">
         {{end}}
             <p class="note title">{{- .Title | safeHTML -}} {{ if .Params.external }} ⇗{{end}}</p></a>
-            {{- if .Lastmod  -}}
-                <p class="note date">mod:  {{- .Lastmod.Format $dateFormat -}}</p>
+            {{- if .Lastmod -}}
+                <p class="note date">{{- .Lastmod.Format $dateFormat -}}</p>
             {{- end -}}
-            <div class="note content">{{- .Content -}}</div>
-
-            {{- $imgs := .Params.imgs -}}
-            {{- with $imgs -}}
-                <span class="note imgs">
-                    {{- $imgCount := len $imgs -}}
-                    {{- range $imgs -}}
-                    {{- $imgurl := lower . -}}
-                    {{- if and (not (hasPrefix $imgurl "http://")) (not (hasPrefix $imgurl "https://")) -}}
-                    {{- $imgurl := path.Join $relURL . -}}
-                    {{- end -}}
-                    <img alt="" loading="lazy" class="img" src="{{- $imgurl -}}"/>
-                    {{- end -}}
-                </span>
+            {{- if .Summary -}}
+            <div class="note content"><p>{{- .Summary | plainify | truncate 250 -}}</p></div>
             {{- end -}}
-        </a>
+            {{- if .Truncated -}}
+            <div class="note read-more">
+                <a href="{{ .RelPermalink }}">Read more &rarr;</a>
+            </div>
+            {{- end -}}
         {{- partial "note-labels.html" . -}}
     </article>
     </li>
