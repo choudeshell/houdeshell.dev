@@ -11,15 +11,161 @@ section = "about"
 
 +++
 
+<style>
+.about-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5em;
+  margin-bottom: 1.5em;
+}
+.about-terminal {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.2em 1.5em;
+  margin: 1.5em 0;
+  font-size: 0.85em;
+  line-height: 1.8;
+}
+.about-terminal .prompt {
+  color: var(--accent);
+}
+.about-terminal .cmd {
+  color: var(--text);
+}
+.about-terminal .output {
+  color: var(--text-secondary);
+}
+.about-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5em;
+  margin: 1.5em 0;
+}
+.about-section h3 {
+  margin-top: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+.talk-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.5em 0 0;
+}
+.talk-list li {
+  padding: 0.3em 0;
+  font-size: 0.9em;
+}
+.talk-list li::before {
+  content: "$ ";
+  color: var(--accent);
+  font-weight: 700;
+}
+</style>
+
 ## `whoami`
 
-Hello. I'm Chris Houdeshell. I'm a bit herder, a pointer wrecker, and HTTP is my best friend. 0xA3 & 0x7C are also my friends, but not 0x08.
+Hello. I'm Chris Houdeshell. I'm a bit herder, a pointer wrecker, and HTTP is my best friend. `0xA3` & `0x7C` are also my friends, but not `0x08`.
 
-I spend my days creating bits that make the cloud fluffy. I love all modern technology but a special place is reserved in my heart for low-level, embedded devices, distributed systems and anything that has a content-type.
+I spend my days somewhere between writing code and making sure other people can write better code. I love distributed systems, low-level embedded devices, and anything that has a `content-type`. I also have an unhealthy relationship with YAML — but that's a Kubernetes problem.
 
-During the day, I conjure up software as the VP of Software Engineering and Operations at [EnergyCAP](http://www.energycap.com). Or I just have meetings about conjuring up software.
+<div class="about-terminal">
+<span class="prompt">~</span> <span class="cmd">cat /etc/career.conf</span><br>
+<span class="output">
+ROLE="VP of Engineering and Operations"<br>
+COMPANY="EnergyCAP"<br>
+LOCATION="State College, PA"<br>
+TENURE="15+ years"<br>
+STACK="dotnet, postgres, k8s, azure, too-much-sql"<br>
+COFFEE_INTAKE="dangerously high"<br>
+</span>
+</div>
 
-I also drink a bit too much coffee ☕ while rambling on about technology. If you are willing to have a conversation -- I am ready to buy you a cup.
+## The day job
 
-Email me at [chris@houdeshell.dev](mailto:chris@houdeshell.dev)
+During the day, I lead engineering and operations at [EnergyCAP](https://www.energycap.com) — a SaaS platform that helps organizations track utility spend, energy consumption, and sustainability goals across massive building portfolios. We're talking **$100B+ in utility bill spend** tracked across **350,000+ sites**. Government, education, healthcare, commercial real estate — if it has a meter, we probably manage it.
 
+I started here as a developer in 2009 and have been building ever since — through senior roles, into leadership, and eventually into the VP seat where I get to shape both the tech and the teams behind it. Some days that means architecture decisions. Most days it means removing blockers so smart people can do their best work. And yes, sometimes it's just meetings about meetings.
+
+My philosophy is simple: **technology should serve people**. Build teams where people feel safe to be wrong, give them the tools to be great, and get out of the way.
+
+<div class="about-section">
+
+### Things I geek out about
+
+Distributed systems, container orchestration, database performance tuning, developer tooling, process dumps, leadership that doesn't suck, making engineers' lives better, and the eternal quest for a perfect terminal setup.
+
+</div>
+
+## I also talk at things
+
+I like getting on stage and nerding out about the things I've learned the hard way. My talks tend to fall into a few buckets — and yes, I have strong opinions about all of them.
+
+### AI & the developer experience
+
+The AI wave hit and I leaned in. I've talked about using LLMs as debugging partners, building RAG pipelines that actually know your business context, and the ethical lines we should be drawing as we hand more work to machines.
+
+<ul class="talk-list">
+<li>My Rubber Duck is a Large Language Model</li>
+<li>Unleashing the Power of the AI Wizards: Retrieval-Augmented Generation Spells</li>
+</ul>
+
+### Kubernetes & cloud native
+
+I was late to the Kubernetes party — and I'll tell you all about it. From lightweight K3s workshops to navigating the 900+ services in the CNCF landscape, to making the case that cloud-native principles work even when you're not in the cloud.
+
+<ul class="talk-list">
+<li>Kubernetes Chronicles: Late to the Party, Big on Adventure!</li>
+<li>K3s — Half the Size, Twice as Awesome (workshop)</li>
+<li>Orchestrating Machine Learning Workloads with Kubernetes</li>
+<li>Exploring the Cloud Native Landscape</li>
+<li>Cloud Native is Only for the Cloud, Right?</li>
+<li>Nomad — Orchestration Doesn't Start with a K</li>
+</ul>
+
+### Performance & databases
+
+I've spent an unreasonable amount of time staring at query plans. These talks cover squeezing performance out of SQL Server, using DMVs like cheat codes, and that one time we took a 10-hour process down to 10 minutes.
+
+<ul class="talk-list">
+<li>ReArchitecting Data: 10 Hours to 10 Minutes</li>
+<li>Mastering SQL Server Performance Optimization (workshop)</li>
+<li>SQL Server DMVs That Give Me Superpowers</li>
+<li>Achieving Continuous High Performance with Query Store</li>
+<li>Practical High Performance: C# Edition</li>
+<li>Intrinsics in .NET: Start Somewhere</li>
+</ul>
+
+### Production war stories & leadership
+
+Production breaks. Systems fail. The interesting part is what you do next. I also talk about the human side — what I've learned (and gotten wrong) leading engineering teams.
+
+<ul class="talk-list">
+<li>Bug Squashing with Process Dumps</li>
+<li>Recovery by Design: A Postmortem Adventure</li>
+<li>Joining the Cloud: Our Journey</li>
+<li>TIL as a CTO</li>
+</ul>
+
+### The wildcard
+
+Sometimes you just want to build something fun with your hands.
+
+<ul class="talk-list">
+<li>Paper Circuits: Origami for a New Generation</li>
+</ul>
+
+## Let's talk
+
+I drink a bit too much coffee while rambling on about technology. If you're willing to have a conversation — I'm ready to buy you a cup.
+
+<div class="about-terminal">
+<span class="prompt">~</span> <span class="cmd">echo $CONTACT</span><br>
+<span class="output">
+email: <a href="mailto:chris@houdeshell.dev">chris@houdeshell.dev</a><br>
+github: <a href="https://github.com/choudeshell">choudeshell</a><br>
+linkedin: <a href="https://www.linkedin.com/in/choudeshell/">choudeshell</a><br>
+twitter: <a href="https://twitter.com/choudeshell">@choudeshell</a><br>
+</span>
+</div>
