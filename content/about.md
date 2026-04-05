@@ -12,7 +12,7 @@ section = "about"
 +++
 
 
-<div class="hero-card" style="margin-bottom:2em">
+<div class="hero-card">
     <div class="hero-accent"></div>
     <div class="hero-content">
         <p class="hero-greeting">whoami</p>
@@ -20,7 +20,6 @@ section = "about"
         <p class="hero-tagline">bit herder. pointer wrecker. yaml apologist.</p>
         <div class="hero-divider"></div>
         <p class="hero-currently"><span class="hero-label">stack:</span> dotnet, postgres, k8s, azure, too-much-sql</p>
-        <p class="hero-currently"><span class="hero-label">location:</span> State College, PA</p>
         <p class="hero-currently"><span class="hero-label">coffee intake:</span> dangerously high</p>
         <div class="hero-links">
             <a href="https://github.com/choudeshell">github</a>

@@ -7,24 +7,29 @@
 <section class="hero">
     <div class="hero-card">
         <div class="hero-accent"></div>
-        <div class="hero-content">
-            <p class="hero-greeting">Hi! I'm</p>
-            <p class="hero-name">Chris <span class="hero-hl">Houdeshell</span></p>
-            <p class="hero-tagline">bit herder. pointer wrecker. yaml apologist.</p>
-            <div class="hero-divider"></div>
-            <p class="hero-slogan">{{ site.Params.slogan }}</p>
-            <p class="hero-currently"><span class="hero-label">currently:</span> deep in k8s and cloud, poking at eBPF, tuning kernel params, mass producing yaml</p>
-            {{- with $latest -}}
-            <p class="hero-latest"><span class="hero-label">latest post:</span> <a href="{{ .RelPermalink }}">{{ .Title }}</a></p>
-            {{- end -}}
-            <div class="hero-links">
-                <a href="https://github.com/choudeshell">github</a>
-                <span class="hero-sep">/</span>
-                <a href="https://www.linkedin.com/in/choudeshell/">linkedin</a>
-                <span class="hero-sep">/</span>
-                <a href="https://sessionize.com/choudeshell/">talks</a>
-                <span class="hero-sep">/</span>
-                <a href="/about/">about</a>
+        <div class="hero-content hero-layout">
+            <div class="hero-left">
+                <p class="hero-greeting">Hi! I'm</p>
+                <p class="hero-name">Chris <span class="hero-hl">Houdeshell</span></p>
+                <p class="hero-tagline">bit herder. pointer wrecker. yaml apologist.</p>
+                <div class="hero-divider"></div>
+                <p class="hero-slogan">{{ site.Params.slogan }}</p>
+                <div class="hero-links">
+                    <a href="https://github.com/choudeshell">github</a>
+                    <span class="hero-sep">/</span>
+                    <a href="https://www.linkedin.com/in/choudeshell/">linkedin</a>
+                    <span class="hero-sep">/</span>
+                    <a href="https://sessionize.com/choudeshell/">talks</a>
+                    <span class="hero-sep">/</span>
+                    <a href="/about/">about</a>
+                </div>
+            </div>
+            <div class="hero-right">
+                <p class="hero-currently"><span class="hero-label">currently:</span> deep in k8s and cloud, poking at eBPF, tuning kernel params, mass producing yaml</p>
+                {{- with $latest -}}
+                <p class="hero-latest"><span class="hero-label">latest post:</span> <a href="{{ .RelPermalink }}">{{ .Title }}</a></p>
+                {{- end -}}
+                <p class="hero-currently"><span class="hero-label">stack:</span> dotnet, postgres, k8s, azure</p>
             </div>
         </div>
     </div>

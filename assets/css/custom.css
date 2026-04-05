@@ -739,15 +739,58 @@ del, s {
 }
 
 .hero-content {
+  width: 100%;
   max-width: 1170px;
   margin: 0 auto;
   padding: 2em 0;
+  box-sizing: border-box;
 }
 
-@media (max-width: 1012px) {
+.hero-layout {
+  display: flex;
+  gap: 3em;
+  align-items: flex-start;
+}
+
+.hero-left {
+  flex: 1;
+}
+
+.hero-right {
+  flex: 0 0 320px;
+  border-left: 1px solid var(--border);
+  padding-left: 2em;
+  margin-top: 0.5em;
+}
+
+@media (max-width: 1200px) {
   .hero-content {
-    padding: 2em 24px;
+    padding: 2em 16px;
   }
+}
+
+@media (max-width: 768px) {
+  .hero-layout {
+    flex-direction: column;
+    gap: 1.5em;
+  }
+
+  .hero-right {
+    flex: none;
+    border-left: none;
+    border-top: 1px solid var(--border);
+    padding-left: 0;
+    padding-top: 1.5em;
+  }
+}
+
+/* About page hero (inside #content, not full-width) */
+.article.markdown-body .hero-card {
+  margin-bottom: 2em;
+}
+
+.article.markdown-body .hero-content {
+  padding: 2em;
 }
 
 .hero-name {
