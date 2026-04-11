@@ -987,6 +987,7 @@ del, s {
 .post-card-link {
   text-decoration: none !important;
   color: inherit;
+  font-weight: 400;
   display: block;
 }
 
