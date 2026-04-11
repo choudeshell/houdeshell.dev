@@ -12,23 +12,33 @@ section = "about"
 +++
 
 
-<div class="hero-card">
-    <div class="hero-accent"></div>
-    <div class="hero-content">
-        <p class="hero-greeting">whoami</p>
-        <p class="hero-name">Chris <span class="hero-hl">Houdeshell</span></p>
-        <p class="hero-tagline">bit herder. pointer wrecker. yaml apologist.</p>
-        <div class="hero-divider"></div>
-        <p class="hero-currently"><span class="hero-label">stack:</span> dotnet, postgres, k8s, azure, too-much-sql</p>
-        <p class="hero-currently"><span class="hero-label">coffee intake:</span> dangerously high</p>
-        <div class="hero-links">
-            <a href="https://github.com/choudeshell">github</a>
-            <span class="hero-sep">/</span>
-            <a href="https://www.linkedin.com/in/choudeshell/">linkedin</a>
-            <span class="hero-sep">/</span>
-            <a href="https://sessionize.com/choudeshell/">talks</a>
-            <span class="hero-sep">/</span>
-            <a href="mailto:chris@houdeshell.dev">email</a>
+<div class="hero-terminal">
+    <div class="hero-titlebar">
+        <div class="hero-dots">
+            <span class="hero-dot dot-red"></span>
+            <span class="hero-dot dot-yellow"></span>
+            <span class="hero-dot dot-green"></span>
+        </div>
+        <span class="hero-titlebar-text">about &mdash; zsh</span>
+    </div>
+    <div class="hero-body">
+        <div class="hero-grid-bg"></div>
+        <div class="hero-content">
+            <p class="hero-prompt"><span class="hero-prompt-symbol">$</span> whoami</p>
+            <p class="hero-name">Chris <span class="hero-hl">Houdeshell</span></p>
+            <p class="hero-tagline">bit herder. pointer wrecker. yaml apologist.</p>
+            <div class="hero-divider"></div>
+            <p class="hero-stat"><span class="hero-key">stack</span><span class="hero-val">dotnet, postgres, k8s, azure, too-much-sql</span></p>
+            <p class="hero-stat"><span class="hero-key">coffee</span><span class="hero-val">dangerously high</span></p>
+            <div class="hero-links">
+                <a href="https://github.com/choudeshell">github</a>
+                <span class="hero-sep">/</span>
+                <a href="https://www.linkedin.com/in/choudeshell/">linkedin</a>
+                <span class="hero-sep">/</span>
+                <a href="https://sessionize.com/choudeshell/">talks</a>
+                <span class="hero-sep">/</span>
+                <a href="mailto:chris@houdeshell.dev">email</a>
+            </div>
         </div>
     </div>
 </div>
