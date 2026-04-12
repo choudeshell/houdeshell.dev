@@ -43,7 +43,7 @@ metadata:
 
 #### The Secrets
 
-Two secrets. One for Azure Blob credentials, one for PostgreSQL:
+Three secrets. Azure Blob credentials, PostgreSQL connection, and SSH host keys.
 
 ```yaml
 apiVersion: v1
@@ -72,9 +72,25 @@ If you're using Managed Identity for the Azure side (and you should be if you ca
 
 SFTPGo reads its data provider config from environment variables using the `SFTPGO_DATA_PROVIDER__` prefix. The double underscore maps to the nested JSON structure. Neat trick that saves you from templating JSON.
 
+The host keys get their own secret. Generate them once, store them in the cluster, and every pod (current and future replicas) uses the same keys. If you skip this step and let SFTPGo generate keys on startup, every pod restart hands clients a different fingerprint. That `WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!` message trains users to blindly accept key changes, which is the opposite of what SSH security is for.
+
+```bash
+# Generate the keys locally
+ssh-keygen -t ed25519 -f id_ed25519 -N ""
+ssh-keygen -t rsa -b 4096 -f id_rsa -N ""
+
+# Create the secret
+kubectl create secret generic sftpgo-hostkeys -n sftpgo \
+  --from-file=id_ed25519 \
+  --from-file=id_rsa
+
+# Clean up local copies
+rm id_ed25519 id_ed25519.pub id_rsa id_rsa.pub
+```
+
 #### The ConfigMap
 
-SFTPGo has a mountain of configuration options. The data provider config is handled by the env vars in the secret above, so the ConfigMap just needs the SFTP and HTTP bindings:
+SFTPGo has a mountain of configuration options. The data provider config is handled by the env vars in the secret above, so the ConfigMap just needs the SFTP, HTTP, and telemetry bindings:
 
 ```yaml
 apiVersion: v1
@@ -99,11 +115,17 @@ data:
           "enable_web_admin": true,
           "enable_web_client": true
         }]
+      },
+      "telemetry": {
+        "bind_port": 10000,
+        "bind_address": "",
+        "enable_profiler": false,
+        "auth_user_file": ""
       }
     }
 ```
 
-Port `2022` for SFTP, port `8080` for the web admin. PostgreSQL connection details come from the `sftpgo-db` secret, so they stay out of the ConfigMap where they belong.
+Port `2022` for SFTP, port `8080` for the web admin, port `10000` for the Prometheus metrics endpoint. PostgreSQL connection details come from the `sftpgo-db` secret, so they stay out of the ConfigMap where they belong.
 
 #### PostgreSQL
 
@@ -212,6 +234,8 @@ spec:
               name: sftp
             - containerPort: 8080
               name: http
+            - containerPort: 10000
+              name: metrics
           envFrom:
             - secretRef:
                 name: sftpgo-azure
@@ -221,8 +245,14 @@ spec:
             - name: config
               mountPath: /etc/sftpgo/sftpgo.json
               subPath: sftpgo.json
-            - name: data
-              mountPath: /var/lib/sftpgo
+            - name: hostkeys
+              mountPath: /var/lib/sftpgo/id_ed25519
+              subPath: id_ed25519
+              readOnly: true
+            - name: hostkeys
+              mountPath: /var/lib/sftpgo/id_rsa
+              subPath: id_rsa
+              readOnly: true
           resources:
             requests:
               cpu: 100m
@@ -234,26 +264,13 @@ spec:
         - name: config
           configMap:
             name: sftpgo-config
-        - name: data
-          persistentVolumeClaim:
-            claimName: sftpgo-data
+        - name: hostkeys
+          secret:
+            secretName: sftpgo-hostkeys
+            defaultMode: 0600
 ```
 
-Both secrets are mounted via `envFrom`. The PVC for `/var/lib/sftpgo` persists host keys across pod restarts. If the host keys regenerate, every client that's connected before will get an angry `WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!` and your users will think they're being MITM'd.
-
-```yaml
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: sftpgo-data
-  namespace: sftpgo
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-```
+No PVC needed. Config comes from a ConfigMap, credentials from Secrets, host keys from a Secret, and user data lives in PostgreSQL. The Deployment is completely stateless, which means Kubernetes can reschedule pods freely and scaling replicas is trivial (more on that below).
 
 #### The Service
 
@@ -277,6 +294,10 @@ spec:
     - name: http
       port: 8080
       targetPort: 8080
+      protocol: TCP
+    - name: metrics
+      port: 10000
+      targetPort: 10000
       protocol: TCP
 ```
 
@@ -378,9 +399,218 @@ For the cost of a small pod running on your existing cluster, you now have:
 - **Audit logging** of every connection and file operation
 - **A web UI** for managing users via `kubectl port-forward`
 
-### Things to Watch Out For
+### Scaling Up: Multiple Replicas
 
-**Host keys.** Persist them. I said it already but I'll say it again because I've seen this bite people in production.
+A single SFTPGo pod works fine until it doesn't. Maybe you need high availability. Maybe you have enough concurrent connections that one pod is sweating. Maybe you just don't want a single point of failure sitting between your vendors and their file drops.
+
+The good news: because we set this up with PostgreSQL for state and Secrets for host keys, the Deployment is already stateless. Scaling is just:
+
+```yaml
+spec:
+  replicas: 3
+```
+
+That's it. No migration, no rearchitecture. Every replica mounts the same host keys from the `sftpgo-hostkeys` Secret, so clients get a consistent SSH fingerprint regardless of which pod they land on. User data, virtual folder configs, and quota tracking all live in PostgreSQL, so every replica sees the same state.
+
+SFTPGo also supports a shared event system through the data provider. When one instance updates a user, other instances pick up the change. No manual cache invalidation, no restart required.
+
+#### Load Distribution
+
+SFTP is a TCP protocol, so Kubernetes' default round-robin Service routing handles connection distribution automatically. Each new SFTP connection lands on a different pod. Connections are sticky for their duration (TCP, after all), so a long-running transfer won't bounce between pods mid-stream.
+
+If you're using the nginx-ingress TCP proxy from earlier, the same applies there. Each new inbound connection on port 2222 gets routed to the ClusterIP Service, which distributes across replicas.
+
+One thing to note: SFTP connections are long-lived. CPU and memory might look low even under heavy transfer load because the bottleneck is usually network I/O, not compute. If you want autoscaling, you'll need custom metrics rather than CPU. The monitoring section below covers exactly how to set that up.
+
+### Monitoring with Prometheus and Grafana
+
+Running an SFTP server without monitoring is like deploying to production without logs. You technically *can*, but the first time a vendor calls asking why their upload failed three hours ago, you'll wish you hadn't.
+
+SFTPGo has a built-in Prometheus metrics endpoint. We already enabled it in the config on port `10000`. Hit `/metrics` on that port and you get the standard Prometheus exposition format with everything you'd want to know: active connections, bytes transferred, upload/download counts, error rates, and data provider health.
+
+#### ServiceMonitor
+
+If you're running the [Prometheus Operator](https://github.com/prometheus-operator/prometheus-operator) (and if you're on Kubernetes with Prometheus, you probably are), a ServiceMonitor makes scrape configuration automatic:
+
+```yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: sftpgo
+  namespace: sftpgo
+  labels:
+    app: sftpgo
+spec:
+  selector:
+    matchLabels:
+      app: sftpgo
+  endpoints:
+    - port: metrics
+      interval: 30s
+      path: /metrics
+```
+
+That's the whole thing. The Prometheus Operator picks this up, finds the `sftpgo` Service's `metrics` port, and starts scraping. No need to edit Prometheus config files or restart anything.
+
+If you're running vanilla Prometheus without the Operator, add a scrape job to your `prometheus.yml`:
+
+```yaml
+scrape_configs:
+  - job_name: "sftpgo"
+    kubernetes_sd_configs:
+      - role: endpoints
+        namespaces:
+          names:
+            - sftpgo
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_endpoint_port_name]
+        action: keep
+        regex: metrics
+```
+
+#### What Gets Exposed
+
+SFTPGo's `/metrics` endpoint exports a solid set of counters and gauges. Some of the useful ones:
+
+- `sftpgo_active_connections` - current active SFTP connections per pod
+- `sftpgo_active_transfers` - in-progress file transfers
+- `sftpgo_bytes_sent_total` / `sftpgo_bytes_received_total` - cumulative transfer volume
+- `sftpgo_uploads_total` / `sftpgo_downloads_total` - file operation counts
+- `sftpgo_uploads_errors_total` / `sftpgo_downloads_errors_total` - failed transfers
+- `sftpgo_data_provider_availability` - whether the PostgreSQL connection is healthy
+
+That last one is important. If the data provider goes down, SFTPGo can't authenticate users. You want to know about that before your vendors do.
+
+#### Grafana Dashboard
+
+SFTPGo ships a pre-built Grafana dashboard that you can import directly. Grab it from the [SFTPGo repo](https://github.com/drakkan/sftpgo) or import dashboard ID `16498` from Grafana's dashboard marketplace.
+
+If you'd rather build your own, here are a few PromQL queries worth pinning:
+
+**Active connections across all replicas:**
+
+```promql
+sum(sftpgo_active_connections)
+```
+
+**Transfer throughput (bytes/sec, 5-minute rate):**
+
+```promql
+sum(rate(sftpgo_bytes_sent_total[5m]) + rate(sftpgo_bytes_received_total[5m]))
+```
+
+**Upload error rate as a percentage:**
+
+```promql
+sum(rate(sftpgo_uploads_errors_total[5m]))
+  / sum(rate(sftpgo_uploads_total[5m])) * 100
+```
+
+**Data provider health (alert if any pod loses DB connectivity):**
+
+```promql
+min(sftpgo_data_provider_availability) == 0
+```
+
+That last query is a good candidate for a Prometheus alert rule. If any replica can't reach PostgreSQL, fire an alert. The `min` catches the case where one pod is healthy but another has lost its connection.
+
+#### Tying It Back to Autoscaling
+
+Remember the HPA note from the replicas section? `sftpgo_active_connections` is your custom metric for scaling. With the [Prometheus Adapter](https://github.com/kubernetes-sigs/prometheus-adapter), you can scale SFTPGo pods based on actual connection count instead of CPU:
+
+```yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: sftpgo
+  namespace: sftpgo
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: sftpgo
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+    - type: Pods
+      pods:
+        metric:
+          name: sftpgo_active_connections
+        target:
+          type: AverageValue
+          averageValue: "50"
+```
+
+When the average connection count per pod crosses 50, Kubernetes spins up another replica. When it drops, it scales back down. Way better than guessing based on CPU, which barely moves during SFTP transfers.
+
+### Central Logging
+
+Metrics tell you what's happening right now. Logs tell you what happened at 2am when that vendor's automated upload script decided to authenticate 400 times in a row with the wrong password.
+
+SFTPGo writes structured JSON logs to stdout by default, which is exactly what you want on Kubernetes. No sidecar containers, no log file rotation, no volume mounts for log directories. Your cluster's log collector (Fluentd, Fluent Bit, Promtail, Vector, whatever you're running) picks them up automatically from the container runtime.
+
+A typical SFTPGo log line looks like this:
+
+```json
+{
+  "level": "info",
+  "time": "2026-04-11T14:32:01.123Z",
+  "sender": "sftpd",
+  "message": "User logged in",
+  "username": "vendor-uploads",
+  "remote_address": "10.244.3.15:48212",
+  "protocol": "SFTP",
+  "connection_id": "abc123"
+}
+```
+
+Every log entry includes the username, remote address, protocol, and connection ID. File operations include the file path and transfer size. Auth failures include the attempted username and the reason. All structured, all parseable, all ready to ship to wherever your logs land.
+
+#### Configuring Log Format
+
+SFTPGo defaults to JSON on stdout, but you can control the verbosity. Add a `logger` block to the ConfigMap if you want to tune it:
+
+```json
+{
+  "logger": {
+    "enabled": true,
+    "level": "info",
+    "utc_time": true
+  }
+}
+```
+
+Keep it at `info` for production. `debug` is useful when you're troubleshooting auth issues or virtual folder mappings, but it's chatty. It logs every single SSH handshake step, every directory listing, every stat call. On a busy server, that's a lot of log volume.
+
+#### What to Query For
+
+Once your logs are in Loki, Elasticsearch, or whatever your stack uses, these are the queries worth saving:
+
+**Failed authentication attempts** are the first thing you want to see. Brute force attempts, expired credentials, misconfigured clients. In Loki with LogQL:
+
+```logql
+{namespace="sftpgo"} | json | level="error" | message=~".*authentication.*"
+```
+
+**File transfer activity by user** gives you an audit trail. Who uploaded what, when, and how big:
+
+```logql
+{namespace="sftpgo"} | json | message="Upload" | line_format "{{.username}} {{.virtual_path}} {{.elapsed_ms}}ms"
+```
+
+**Connection patterns** help you spot anomalies. A user that normally connects once a day suddenly hammering the server every 30 seconds is worth investigating:
+
+```logql
+sum by (username) (count_over_time({namespace="sftpgo"} | json | message="User logged in" [1h]))
+```
+
+#### Audit Trail
+
+For compliance-heavy environments (and if you're handling file transfers for enterprise partners, you're probably in one), SFTPGo's structured logs give you a complete audit trail out of the box. Every login, every file operation, every disconnect. Combined with the username and remote IP in each log entry, you can reconstruct exactly who did what and when.
+
+Pipe these into a long-retention store (separate from your operational logs) and you've got audit coverage without bolting on a separate audit system. Set a retention policy that matches your compliance requirements and forget about it.
+
+### Things to Watch Out For
 
 **Keep the admin UI internal.** The admin UI has full control over user accounts. Don't Ingress it. Don't LoadBalancer it. `kubectl port-forward` when you need it, close it when you don't. If you absolutely need remote access, put it behind an auth proxy and a VPN. Not just one of those. Both.
 
@@ -397,6 +627,7 @@ For the cost of a small pod running on your existing cluster, you now have:
 | Multi-user support | Local users only | Full user management |
 | Quotas/throttling | No | Yes |
 | Audit logging | Azure Monitor | Built-in + syslog |
+| Prometheus metrics | No | Native /metrics endpoint |
 | Admin UI exposure | N/A | Internal only (port-forward) |
 | Setup complexity | Toggle in portal | Deploy to K8s |
 
