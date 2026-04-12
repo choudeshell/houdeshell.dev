@@ -97,9 +97,32 @@ a:hover {
 
 .site.name {
   color: var(--text);
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 2em;
+  letter-spacing: -0.03em;
+}
+
+.logo-text {
+  font-weight: 300;
+}
+
+.logo-dot {
+  color: var(--accent);
+  font-weight: 300;
+}
+
+.logo-tld {
+  color: var(--link);
+  font-weight: 300;
+  letter-spacing: 0.01em;
+}
+
+.hl.bracket {
   font-family: "JetBrains Mono", "Fira Code", monospace;
-  font-weight: 500;
-  letter-spacing: -0.02em;
+  color: var(--accent);
+  font-weight: 300;
+  font-size: 0.8em;
+  opacity: 0.6;
 }
 
 .hl {
