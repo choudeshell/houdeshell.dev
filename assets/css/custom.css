@@ -472,33 +472,109 @@ del, s {
 
 /* -- 404 page -- */
 
-.fourohfour h1 {
-  text-align: center;
-  font-size: 1.6em;
-}
-
 .fourohfour-content {
-  max-width: 600px;
+  max-width: 700px;
   margin: 0 auto;
 }
 
 .fourohfour-ascii {
   text-align: center;
   color: var(--accent);
-  font-size: 1.1em;
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-size: 1em;
+  font-weight: 700;
   border: none;
   background: transparent;
-  margin: 2em 0 1.5em;
+  margin: 1.5em 0 2em;
+  line-height: 1.3;
 }
 
-.fourohfour-content p,
-.fourohfour-content ul {
-  font-size: 0.95em;
+.fourohfour-terminal {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--code-bg);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+}
+
+.fourohfour-titlebar {
+  display: flex;
+  gap: 6px;
+  padding: 0.6em 1em;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+}
+
+.fourohfour-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.fourohfour-body {
+  padding: 1.5em;
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-size: 0.8em;
+  line-height: 1.8;
+}
+
+.fourohfour-line {
+  margin: 0;
   color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.fourohfour-content a {
+.fourohfour-prompt {
+  color: var(--accent);
+  margin-right: 0.5em;
   font-weight: 600;
+}
+
+.fourohfour-response {
+  color: var(--text-secondary);
+  opacity: 0.7;
+  padding-left: 1.5em;
+}
+
+.fourohfour-status {
+  color: #ff5f57;
+  font-weight: 600;
+}
+
+.fourohfour-ts {
+  color: var(--link);
+}
+
+.fourohfour-hash {
+  color: var(--accent);
+}
+
+.fourohfour-home {
+  color: var(--link);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.fourohfour-home:hover {
+  color: var(--link-hover);
+}
+
+.fourohfour-cursor {
+  color: var(--accent);
+  animation: blink 1s step-end infinite;
+}
+
+@media (max-width: 768px) {
+  .fourohfour-body {
+    font-size: 0.7em;
+    padding: 1em;
+  }
+
+  .fourohfour-ascii {
+    font-size: 0.7em;
+  }
 }
 
 /* -- Footer -- */

@@ -1,25 +1,37 @@
 {{- define "main" -}}
 <div class="article-container">
 <article class="article markdown-body fourohfour">
-  <h1 id="title">404: Page Not Found</h1>
   <div class="fourohfour-content">
     <pre class="fourohfour-ascii">
-    _____ _____ _____
-   |  _  |     |  _  |
-   |   __|  |  |   __|
-   |__|  |_____|__|
-
-   SEGFAULT (core dumped)
+     _  _    ___  _  _
+    | || |  / _ \| || |
+    | || |_| | | | || |_
+    |__   _| | | |__   _|
+       | | | |_| |  | |
+       |_|  \___/   |_|
     </pre>
-    <p>The page you're looking for has been garbage collected.</p>
-    <p>Possible causes:</p>
-    <ul>
-      <li>The pointer you followed has been freed</li>
-      <li>This route was deprecated without a migration path</li>
-      <li>Someone did a <code>git push --force</code> and didn't tell anyone</li>
-      <li>It's DNS. It's always DNS.</li>
-    </ul>
-    <p><a href="/">cd ~</a> and try again.</p>
+    <div class="fourohfour-terminal">
+      <div class="fourohfour-titlebar">
+        <span class="fourohfour-dot dot-red"></span>
+        <span class="fourohfour-dot dot-yellow"></span>
+        <span class="fourohfour-dot dot-green"></span>
+      </div>
+      <div class="fourohfour-body">
+        <p class="fourohfour-line"><span class="fourohfour-prompt">$</span> curl -I {{ .Site.BaseURL }}{{ with .File }}{{ .Path }}{{ end }}</p>
+        <p class="fourohfour-line fourohfour-response">HTTP/1.1 <span class="fourohfour-status">404 Not Found</span></p>
+        <p class="fourohfour-line fourohfour-response">Content-Type: text/disappointment</p>
+        <p class="fourohfour-line fourohfour-response">X-Blame: probably-dns</p>
+        <p class="fourohfour-line fourohfour-response">X-Suggestion: have you tried turning it off and on again</p>
+        <p class="fourohfour-line">&nbsp;</p>
+        <p class="fourohfour-line"><span class="fourohfour-prompt">$</span> dmesg | tail -1</p>
+        <p class="fourohfour-line fourohfour-response">[<span class="fourohfour-ts">404.000000</span>] page_fault: unable to handle request at virtual address 0xDEADBEEF</p>
+        <p class="fourohfour-line">&nbsp;</p>
+        <p class="fourohfour-line"><span class="fourohfour-prompt">$</span> git log --oneline -1</p>
+        <p class="fourohfour-line fourohfour-response"><span class="fourohfour-hash">e4c3b00</span> remove page nobody will ever need again</p>
+        <p class="fourohfour-line">&nbsp;</p>
+        <p class="fourohfour-line"><span class="fourohfour-prompt">$</span> <a href="/" class="fourohfour-home">cd ~</a><span class="fourohfour-cursor">_</span></p>
+      </div>
+    </div>
   </div>
 </article>
 </div>
